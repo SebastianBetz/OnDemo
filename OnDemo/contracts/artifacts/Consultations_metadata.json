@@ -1,0 +1,165 @@
+{
+	"compiler": {
+		"version": "0.8.1+commit.df193b15"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "consultationAdress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "contract Consultation",
+						"name": "consultation",
+						"type": "address"
+					}
+				],
+				"name": "ConsultationCreated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "consultationIds",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "consultations",
+				"outputs": [
+					{
+						"internalType": "contract Consultation",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_description",
+						"type": "string"
+					}
+				],
+				"name": "createConsultation",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getAllConsultations",
+				"outputs": [
+					{
+						"internalType": "contract Consultation[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "contract Consultation",
+						"name": "_consultation",
+						"type": "address"
+					}
+				],
+				"name": "voteAgainst",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "contract Consultation",
+						"name": "_consultation",
+						"type": "address"
+					}
+				],
+				"name": "votePro",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Consultation.sol": "Consultations"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Consultation.sol": {
+			"keccak256": "0x896d77c4ad6aefe51b597efe89b407ee55d1f341cac77b0789c49ec576fb47d2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c0043946bee00cbc43c7b1e958095551a9e077aac92a9058474fca2f8d1b92c2",
+				"dweb:/ipfs/QmadqzuD6qEEyXvpsZPR87X6jnmJrYzPzA5amafX2kLMMK"
+			]
+		}
+	},
+	"version": 1
+}

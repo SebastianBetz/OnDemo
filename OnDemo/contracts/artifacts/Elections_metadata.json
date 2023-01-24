@@ -1,0 +1,115 @@
+{
+	"compiler": {
+		"version": "0.8.1+commit.df193b15"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "electionAdress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "contract Election",
+						"name": "election",
+						"type": "address"
+					}
+				],
+				"name": "ElectionCreated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_description",
+						"type": "string"
+					}
+				],
+				"name": "createElection",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "contract Election",
+						"name": "_election",
+						"type": "address"
+					}
+				],
+				"name": "disable",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "elections",
+				"outputs": [
+					{
+						"internalType": "contract Election",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Consultation.sol": "Elections"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Consultation.sol": {
+			"keccak256": "0xe1239445b44af11872ecea17395af05907e5b232aaef8aa8befc90a0ac57a1e2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://cb5309b3d2220184dc8e0c84e8e353be93034bfc7d6ba65cabce306a49b2a07b",
+				"dweb:/ipfs/QmW6VyHY7QKMF5tTXRCJ85ngEzM6UrCDgCen1HbfVWJzBf"
+			]
+		}
+	},
+	"version": 1
+}
