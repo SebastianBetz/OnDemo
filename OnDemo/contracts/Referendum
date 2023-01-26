@@ -1,0 +1,154 @@
+pragma solidity >=0.7.0 <0.9.0;
+
+contract Referedum {
+
+    enum CancelationReason { 
+        PUBLICATIONTHRESHOLDREACHED,
+        SUPERVISIONTHRESHOLDREACHED,
+        CANCELEDBYGUARANTEES,
+        CANCELEDBYOWNERS
+    };
+
+    enum State = { 
+        CREATED,
+        ANNOUNCED,
+        PUBLISHED,
+        ACCEPTED,
+        REJECTED,
+        CANCELED
+    };
+
+    address[] owners;
+    string title;
+    string description;
+    uInt creationDate;
+    uIntannouncementThresholdDeadline;
+    uInt publicationThresholdDeadline;
+    Answers[] possibleAnswers;
+    address[] voters;
+    address [] supporters; 
+
+    uint announcementThresholdInDays = 28;
+    uint publicationThresholdInDays = 28;
+
+    uint voteShareNeededToAnnounce = 0.2;
+    uint voteShareNeededToPublish = 1;
+
+    Struct Answer {
+        uInt id,
+        address creator,
+        string title,
+        string description,
+        address[] voters
+    }
+
+    Constructor ( memory string _title, memory string _ description, address[] coOwners, string[][] memory _ possibleAnswers)
+    {
+        owners.push(msg.sender);
+        title = _title;
+        description = _ description;
+        creationDate = block.timestamp;
+        owners = owners + coOwners;
+        state = State.CREATED;
+
+        for(uInt i = 0; I < coOwners.length; i++) {
+            owners.push(coOwners[i]);
+        }
+    }
+
+    modifier isElegibleToVote () {
+        bool hasNotVoted = true;
+        if(this.voters[msg.sender])) {
+            hasNotVoted = false;
+        } 
+        require(hasNotVoted, "User has voted already.");
+        _;
+    }
+
+    modifier isElegibleToSupport () {
+        bool isSupporter = true;
+        if(supporters[msg.sender])) {
+            isSupporter = false;
+        } 
+        require(isSupporter, "User has voted already.");
+        _;
+    }
+
+    function voteForAnswer (memory uInt _answerId) isElegibleToVote public returns bool {
+        for(uInt i = 0; I < answers.length; i++) {
+            Answer a = answers[i];
+            if(a.id == _answerId) {
+                a.voters.push(msg.sender); 
+                voters.push(msg.sender);
+            return true;
+            }
+        }
+        return false;
+    }
+
+    function support() public returns bool {
+        if(!supporters[msg.sender]){
+            supporters.push(msg.sender);
+            return true;
+        }    
+        return false;
+    }
+
+    function disableReferendum(CancelationReason _reason) private returns bool {
+        isPending = false;
+        cancelationReason = _reason;
+    }
+
+    modifier checkDeadlines () {
+        bool referendumIsActive = true;
+        if(now > creationDate + publicationThresholdInDays)
+            disableReferendum(CancelationReason.PUBLICATIONTHRESHOLDREACHED);
+            referendumIsActive = false;
+        )else if(now > creationDate + supervisionThresholdInDays){
+            disableReferendum(CancelationReason.SUPERVISIONTHRESHOLDREACHED);
+            referendumIsActive = false;
+        
+        require(referendumIsActive, "ReferendumHasEndedAlready")
+        _;
+    }
+
+    function checkParticaptionThreshold() checkDeadlines private returns bool{
+        if(state == State.ANNOUNCED){
+            if(elegibleVoterCount / supporters.length > voteShareNeededToAnnounce){
+                advanceReferendumToNextState(State.ANNOUNCED)
+            }
+        } else if(state.PUBLICATED){
+            if(elegibleVoterCount / supporters.length > voteShareNeededToPublish){
+                advanceReferendumToNextState(state.PUBLISHED);
+            }
+        }
+    }
+
+    function advanceReferendumToNextState(memory State _state) checkDeadlines public returns bool {
+        string stateMessage = "";
+
+        switch (_state){
+            case State.ANNOUNCED:
+
+                break;
+            case State.PUBLISHED:
+
+                break;
+            case State.ACCEPTED:
+
+                break;
+            case State.REJECTED:
+
+                break;
+            case State.CANCELED:
+
+                break;
+            default:
+                stateMessage = "State Not Implemented!"
+        }
+
+        emit(stateMessage);
+    }
+
+
+
