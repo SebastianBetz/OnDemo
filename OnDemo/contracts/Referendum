@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0
+
 pragma solidity >=0.7.0 <0.9.0;
 
 contract Referedum {
@@ -7,77 +9,87 @@ contract Referedum {
         SUPERVISIONTHRESHOLDREACHED,
         CANCELEDBYGUARANTEES,
         CANCELEDBYOWNERS
-    };
+    }
 
-    enum State = { 
+    enum State { 
         CREATED,
         ANNOUNCED,
         PUBLISHED,
         ACCEPTED,
         REJECTED,
         CANCELED
-    };
+    }
 
     address[] owners;
     string title;
     string description;
-    uInt creationDate;
-    uIntannouncementThresholdDeadline;
-    uInt publicationThresholdDeadline;
-    Answers[] possibleAnswers;
+    uint creationDate;
+    uint announcementThresholdDeadline;
+    uint publicationThresholdDeadline;
+    Answer[] possibleAnswers;
     address[] voters;
     address [] supporters; 
+    State state;
+    CancelationReason cancelationReason;
+
+    // All voters, will be placed in umbrella smartContract later
+    uint elegibleVoterCount;
+    address[] elegibleVoters;
 
     uint announcementThresholdInDays = 28;
     uint publicationThresholdInDays = 28;
 
-    uint voteShareNeededToAnnounce = 0.2;
-    uint voteShareNeededToPublish = 1;
+    uint voteShareNeededToAnnounce = 2;
+    uint voteShareNeededToPublish = 10;
 
-    Struct Answer {
-        uInt id,
-        address creator,
-        string title,
-        string description,
-        address[] voters
+    struct Answer {
+        uint id;
+        address creator;
+        string title;
+        string description;
+        address[] voters;
     }
 
-    Constructor ( memory string _title, memory string _ description, address[] coOwners, string[][] memory _ possibleAnswers)
+    constructor ( string memory _title, string memory _description, address[] memory _coOwners, string[][] memory _possibleAnswers)
     {
         owners.push(msg.sender);
         title = _title;
-        description = _ description;
+        description = _description;
         creationDate = block.timestamp;
-        owners = owners + coOwners;
         state = State.CREATED;
 
-        for(uInt i = 0; I < coOwners.length; i++) {
-            owners.push(coOwners[i]);
+        for (uint i = 0; i < _coOwners.length; i++) {
+            owners.push(_coOwners[i]);
         }
     }
 
     modifier isElegibleToVote () {
         bool hasNotVoted = true;
-        if(this.voters[msg.sender])) {
-            hasNotVoted = false;
-        } 
+        for (uint i = 0; i < elegibleVoters.length; i++) {
+            if (elegibleVoters[i] == msg.sender) {
+                hasNotVoted = false;
+            } 
+        }
+
         require(hasNotVoted, "User has voted already.");
         _;
     }
 
     modifier isElegibleToSupport () {
         bool isSupporter = true;
-        if(supporters[msg.sender])) {
-            isSupporter = false;
-        } 
+        for (uint i = 0; i < supporters.length; i++) {
+            if (supporters[i] == msg.sender) {
+                isSupporter = false;
+            } 
+        }
         require(isSupporter, "User has voted already.");
         _;
     }
 
-    function voteForAnswer (memory uInt _answerId) isElegibleToVote public returns bool {
-        for(uInt i = 0; I < answers.length; i++) {
-            Answer a = answers[i];
-            if(a.id == _answerId) {
+    function voteForAnswer (uint _answerId) isElegibleToVote public returns (bool) {
+        for (uint i = 0; i < possibleAnswers.length; i++) {
+            Answer storage a = possibleAnswers[i];
+            if (a.id == _answerId) {
                 a.voters.push(msg.sender); 
                 voters.push(msg.sender);
             return true;
@@ -86,69 +98,71 @@ contract Referedum {
         return false;
     }
 
-    function support() public returns bool {
-        if(!supporters[msg.sender]){
-            supporters.push(msg.sender);
-            return true;
-        }    
-        return false;
+    function support() isElegibleToSupport public {
+        supporters.push(msg.sender);
     }
 
-    function disableReferendum(CancelationReason _reason) private returns bool {
-        isPending = false;
+    function disableReferendum(CancelationReason _reason) private returns (bool) {
         cancelationReason = _reason;
+        advanceReferendumToNextState(State.CANCELED);
     }
 
-    modifier checkDeadlines () {
+    modifier checkDeadlines (uint _timeStamp) {
         bool referendumIsActive = true;
-        if(now > creationDate + publicationThresholdInDays)
+        if (_timeStamp > block.timestamp + publicationThresholdInDays){
             disableReferendum(CancelationReason.PUBLICATIONTHRESHOLDREACHED);
             referendumIsActive = false;
-        )else if(now > creationDate + supervisionThresholdInDays){
+        }
+        else if (_timeStamp > block.timestamp + publicationThresholdInDays){
             disableReferendum(CancelationReason.SUPERVISIONTHRESHOLDREACHED);
             referendumIsActive = false;
-        
-        require(referendumIsActive, "ReferendumHasEndedAlready")
+        }
+        require(referendumIsActive, "ReferendumHasEndedAlready");
         _;
     }
 
-    function checkParticaptionThreshold() checkDeadlines private returns bool{
-        if(state == State.ANNOUNCED){
-            if(elegibleVoterCount / supporters.length > voteShareNeededToAnnounce){
-                advanceReferendumToNextState(State.ANNOUNCED)
+    function checkParticaptionThreshold() private returns (bool){
+        //checkDeadlines(uint _timeStamp)
+
+        bool canAdvance = false;
+        if (state == State.ANNOUNCED){
+            if (elegibleVoterCount / supporters.length > voteShareNeededToAnnounce){
+                advanceReferendumToNextState(State.ANNOUNCED);
+                canAdvance = true;
             }
-        } else if(state.PUBLICATED){
-            if(elegibleVoterCount / supporters.length > voteShareNeededToPublish){
-                advanceReferendumToNextState(state.PUBLISHED);
+        } else if (state == State.PUBLISHED){
+            if (elegibleVoterCount / supporters.length > voteShareNeededToPublish){
+                advanceReferendumToNextState(State.PUBLISHED);
+                canAdvance = true;
             }
         }
+        return canAdvance;
     }
 
-    function advanceReferendumToNextState(memory State _state) checkDeadlines public returns bool {
-        string stateMessage = "";
+    function advanceReferendumToNextState(State _state) public returns (bool) {
+        
+        //checkDeadlines(uint _timeStamp)
+        string memory stateMessage = "";
 
-        switch (_state){
-            case State.ANNOUNCED:
+        if (_state == State.ANNOUNCED) {
+                state = State.ANNOUNCED;
 
-                break;
-            case State.PUBLISHED:
+         } else if (_state == State.PUBLISHED){
+             state = State.PUBLISHED;
 
-                break;
-            case State.ACCEPTED:
+         } else if (_state == State.ACCEPTED){
+             state = State.ACCEPTED;
 
-                break;
-            case State.REJECTED:
+         } else if (_state == State.REJECTED){
+             state = State.REJECTED;
 
-                break;
-            case State.CANCELED:
+         } else if (_state == State.CANCELED){
+             state = State.CANCELED;
 
-                break;
-            default:
-                stateMessage = "State Not Implemented!"
+         } else {
+            stateMessage = "State Not Implemented!";
+            }
         }
 
-        emit(stateMessage);
+        //emit(stateMessage);
     }
-
-
-
