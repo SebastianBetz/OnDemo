@@ -1,0 +1,197 @@
+{
+	"compiler": {
+		"version": "0.8.1+commit.df193b15"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract AccountManagement",
+						"name": "_accountManagementAddress",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "accountManagement",
+				"outputs": [
+					{
+						"internalType": "contract AccountManagement",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_referendumId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_description",
+						"type": "string"
+					}
+				],
+				"name": "addAnswer",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_referendumId",
+						"type": "uint256"
+					}
+				],
+				"name": "canSupport",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_referendumId",
+						"type": "uint256"
+					}
+				],
+				"name": "canVote",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_owners",
+						"type": "address[]"
+					},
+					{
+						"internalType": "string",
+						"name": "_title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_description",
+						"type": "string"
+					}
+				],
+				"name": "createReferendum",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"OnDemo/contracts/Referendum.sol": "ReferendumManagement"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"OnDemo/contracts/AccountManagement.sol": {
+			"keccak256": "0x58a4b685ab00e6cd957c36b99cc3c947ce5992f4b21415c116f0790bd3302d83",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://63991555ea1c00180196f30537e5bdfd86b23db6b65fe09c93e08f66f4cf573a",
+				"dweb:/ipfs/QmcJXE6baUTYxfgtNLQsJpL7G8YHjsXhuxAWeR5sw39FPS"
+			]
+		},
+		"OnDemo/contracts/Referendum.sol": {
+			"keccak256": "0xf6cfc4938114b23726032a8a194965b63288ce82820e9c4ed0ea22d8c7ddf823",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://caba7fd18be490321b9640c461af898a185e06fb14b5196778cd874c9287e57d",
+				"dweb:/ipfs/QmP6jnyfvbvZcjvgHGyaPXsNUziDsjo8vq5zRUQxt5g3oY"
+			]
+		}
+	},
+	"version": 1
+}
