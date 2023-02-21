@@ -46,14 +46,14 @@ contract ReferendumManagement {
         address creator;
         string title;
         string description;
-        address[] voters;
+        mapping(address => bool) voters;
     }
 
     address public owner;
     AccountManagement public accountManagement;
 
     uint referendumCount;
-    mapping(uint => Referendum) referendums; // all referendums registered
+    mapping(uint => Referendum) public referendums; // all referendums registered
 
     constructor(AccountManagement _accountManagementAddress) {
         accountManagement = _accountManagementAddress;
@@ -61,9 +61,8 @@ contract ReferendumManagement {
 
     // Manage Referendums
 
-    function createReferendum(address[] memory _owners, string memory _title, string memory _description) public returns (uint) {
-        require(_owners.length > 0, "There must be at least one owner.");
-
+    function createReferendum(string memory _title, string memory _description) public returns (uint) {
+        
         // Check if at least one owner has the right to create a referendum: Member / CouncilMember / Leader
         // todo: check if other owners actually exist!
         if(accountManagement.hasRightToCreateReferendum(msg.sender))
@@ -93,23 +92,32 @@ contract ReferendumManagement {
             ref.state = state;
             ref.answerCount = answerCount;
 
+            addOwner(ref, msg.sender);
             return referendumId;
         }
     }
 
-    function addOwners(Referendum storage _ref, address[] memory _owners) private{
-        for (uint i = 0; i < _owners.length; i++) {
-            _ref.owners[_owners[i]] = true;
-            _ref.supporters[_owners[i]] = true;
+    function addOwner(Referendum storage _ref, address _owner) private{
+        _ref.owners[_owner] = true;
+        _ref.supporters[_owner] = true;
+    }
+
+    function addOwners(uint _referendumId, address[] memory _owners) public{
+        Referendum storage ref = getReferendum(_referendumId);
+        if (ref.state == State.CREATED || ref.state == State.ANNOUNCED || ref.state == State.PUBLISHED) {
+            for (uint i = 0; i < _owners.length; i++) {
+                if(accountManagement.hasRightToCreateReferendum(_owners[i])) {
+                    ref.owners[_owners[i]] = true;
+                    ref.supporters[_owners[i]] = true;
+                }
+            }
         }
     }
 
     function addAnswer(uint _referendumId, string memory _title, string memory _description) public returns (bool) {
         Referendum storage ref = getReferendum(_referendumId);
         address user = msg.sender;
-        if(ref.owners[user])
-        {
-            if (ref.state == State.CREATED || ref.state == State.ANNOUNCED || ref.state == State.PUBLISHED) {
+         if (ref.state == State.CREATED || ref.state == State.ANNOUNCED || ref.state == State.PUBLISHED) {
                 uint answerId = ref.answerCount + 1;
                 Answer storage a = ref.answers[answerId];
                 a.id = answerId;
@@ -119,18 +127,21 @@ contract ReferendumManagement {
                 ref.answerCount++;
                 return true;
             }
-        }
         return false;
     }
 
-
-
+    function removeAnswer(uint _referendumId, uint _answerId) public
+    {
+        Referendum storage ref = getReferendum(_referendumId);
+        delete ref.answers[_answerId];
+    }
+    
     function getReferendum(uint _id) private view returns (Referendum storage){
         return  referendums[_id];
     }
 
-    function getAnswer(uint _referendumId, uint _answerId) private view returns (Answer memory){
-        Referendum storage ref = referendums[_referendumId];
+    function getAnswer(uint _referendumId, uint _answerId) private view returns (Answer storage){
+        Referendum storage ref = getReferendum(_referendumId);
         return ref.answers[_answerId];
     }
 
@@ -167,17 +178,17 @@ contract ReferendumManagement {
         return false;
     }
 
-    /*
+    
     function voteForAnswer (uint _referendumId, uint _answerId) public returns (bool) {
         address _userAddress = msg.sender;
         if(canVote(_userAddress, _referendumId))
         {
             Answer storage a = getAnswer(_referendumId, _answerId);
-            if(a != address(0)){
+            if(a.id == _answerId){
                 Referendum storage ref = getReferendum(_referendumId);
                 ref.voters[_userAddress] = true;
                 a.voters[_userAddress] = true;
-                return bool;
+                return true;
             }
         }
         return false;
@@ -188,7 +199,7 @@ contract ReferendumManagement {
         //advanceReferendumToNextState(State.CANCELED);
     }
 
-    
+    /*
     modifier checkDeadlines (uint _timeStamp) {
         bool referendumIsActive = true;
         if (_timeStamp > block.timestamp + publicationThresholdInDays){

@@ -147,6 +147,99 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "referendums",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "creationDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "announcementThresholdInDays",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "publicationThresholdInDays",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "voteShareNeededToAnnounce",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "voteShareNeededToPublish",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum ReferendumManagement.State",
+						"name": "state",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "answerCount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum ReferendumManagement.CancelationReason",
+						"name": "cancelationReason",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_referendumId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_answerId",
+						"type": "uint256"
+					}
+				],
+				"name": "voteForAnswer",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -177,19 +270,19 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x58a4b685ab00e6cd957c36b99cc3c947ce5992f4b21415c116f0790bd3302d83",
+			"keccak256": "0xde0c5a2a1d746079718c98fff263e2f6c2607836aa36d8301eef9b0eb89a0763",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://63991555ea1c00180196f30537e5bdfd86b23db6b65fe09c93e08f66f4cf573a",
-				"dweb:/ipfs/QmcJXE6baUTYxfgtNLQsJpL7G8YHjsXhuxAWeR5sw39FPS"
+				"bzz-raw://0033c5767a722bd382ad23d84a8c4c6244e8000d589d2d70b4ed8b2e431eecb1",
+				"dweb:/ipfs/QmTGvX9aXqCUpP2Aqdg162i8xAVPf3og7QhpYq5SXw8yCX"
 			]
 		},
 		"OnDemo/contracts/Referendum.sol": {
-			"keccak256": "0xf6cfc4938114b23726032a8a194965b63288ce82820e9c4ed0ea22d8c7ddf823",
+			"keccak256": "0xb4fa7bd63991e0bacb508afdcfe7381f29d5c3df9843f66041675007f3da9392",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://caba7fd18be490321b9640c461af898a185e06fb14b5196778cd874c9287e57d",
-				"dweb:/ipfs/QmP6jnyfvbvZcjvgHGyaPXsNUziDsjo8vq5zRUQxt5g3oY"
+				"bzz-raw://8179c3bea0f5ebd6a76a77e6a31a70972c46f1136ef0fbc5ad33214f806a674e",
+				"dweb:/ipfs/Qmco1vZbsh3wGVNZwEqikUpbYVmmx89n7RQWjr96PsttSf"
 			]
 		}
 	},
