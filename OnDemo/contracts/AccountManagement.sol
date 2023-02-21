@@ -137,6 +137,7 @@ contract AccountManagement {
         }
     }
 
+
     // Setting roles
 
     function assignLeader(address _address) private onlyLeader userExists(_address){
