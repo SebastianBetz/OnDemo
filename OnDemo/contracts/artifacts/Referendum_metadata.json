@@ -58,13 +58,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "announce",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "announcementThresholdInDays",
 				"outputs": [
 					{
@@ -77,39 +70,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "answers",
+				"inputs": [],
+				"name": "canCreate",
 				"outputs": [
 					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "title",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "voterCount",
-						"type": "uint256"
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -207,32 +174,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "creationDate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "description",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -243,56 +184,6 @@
 				"name": "disableAnswer",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "numerator",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "denominator",
-						"type": "uint256"
-					}
-				],
-				"name": "divideAndRoundUp",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getMinSupportCount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "id",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -394,72 +285,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "title",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "updateState",
-				"outputs": [
-					{
-						"internalType": "enum Referendum.State",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "viewAnswers",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "id",
-								"type": "uint256"
-							},
-							{
-								"internalType": "address",
-								"name": "owner",
-								"type": "address"
-							},
-							{
-								"internalType": "string",
-								"name": "title",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "description",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "voterCount",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct Referendum.Answer[]",
-						"name": "",
-						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -470,19 +295,6 @@
 				"name": "voteForAnswer",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "voterCount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -514,19 +326,35 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x5533eb552b364cedff478a0dd57f28e12f00aa270e7016c181b3372d2767dee4",
+			"keccak256": "0x185025fc8431c4230814b6a86877ca828e0234a7c3b29a85750f06ca1b8e35b8",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://ae4a44b99715b2eb360954f8ce0a65243ff822efe1735b349a38af95c733a742",
-				"dweb:/ipfs/QmQy3uw76w1nb3hDypW56chNaTy2yf6wi7pKEMewE8rZJL"
+				"bzz-raw://fa53dc27088b1a84a906ad6843814c911b5b3a9d1988f7b8a696387375ae6e5b",
+				"dweb:/ipfs/QmVHe4K1CF1k5F3aUrVAT279CkDGcPG5KJr6gwHYWjEFa2"
+			]
+		},
+		"OnDemo/contracts/Poll.sol": {
+			"keccak256": "0x7a2ceb8d064714f80349bbf4ac3bad680b4ea170a019f5193b02aff7c4f713de",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2fe04054badd37eb67d0f48f0761fe86b6262efb81a9854d29d7162c4470c614",
+				"dweb:/ipfs/QmcUTpeXMhJncrxZaFaWiDDq2xcDG87BappJom9UgCaJZY"
 			]
 		},
 		"OnDemo/contracts/Referendum.sol": {
-			"keccak256": "0x3a377c606f006ab339b9a727a251b1b302dd7d20c4a81e0d47beba2fb72efeaf",
+			"keccak256": "0x4a25ab537df7f0db47987f49d1276dd77127bd45a31dda31b287e90f9e56a856",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://ec51e22d004767e5d9e2ce3d2ee85cf48415372505a60e2a161fe92c92572cd1",
-				"dweb:/ipfs/QmZTbhp5bre2y1JsZJBKQVwDUMo5ZbmvZQdGSRaPAQAu6j"
+				"bzz-raw://694a4994e6025f17283286146a32f71c101f8e975ba83aa5c7f98a24bc6c5ec7",
+				"dweb:/ipfs/QmVfLpp7jSyNVA5Kep1h6HfRf6Sqnk8uHbkTE4AceqPV4n"
+			]
+		},
+		"OnDemo/contracts/Utils.sol": {
+			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a3dba6bcd21589f42c8cee255fc587ad4f5e442ee53a89a987d67e70784d4974",
+				"dweb:/ipfs/QmQLwgfrxyEPyQQQcU3F7mBXzWu3CzSJRMFnMBFXYfx751"
 			]
 		}
 	},

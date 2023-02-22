@@ -300,6 +300,13 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testAccountManagement",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -330,11 +337,11 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x96d088323595ce1f3e53a033fab463c2eafe7ba5aa52c1b841e3e747b6f910a6",
+			"keccak256": "0x185025fc8431c4230814b6a86877ca828e0234a7c3b29a85750f06ca1b8e35b8",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://8303e43767364eb0416cb6a4eaeec4eb4bdd4b8715a9e03056b4b2612ae1f976",
-				"dweb:/ipfs/QmRj1ZBtWnsM2j6m25N7PHNh4PdY18LnQ1G6XAUNQQ8JNe"
+				"bzz-raw://fa53dc27088b1a84a906ad6843814c911b5b3a9d1988f7b8a696387375ae6e5b",
+				"dweb:/ipfs/QmVHe4K1CF1k5F3aUrVAT279CkDGcPG5KJr6gwHYWjEFa2"
 			]
 		}
 	},

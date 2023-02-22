@@ -283,5 +283,35 @@ contract AccountManagement {
         }
         return  false;
     }
+
+
+
+    function testAccountManagement() public{
+
+        address[10] memory testAccounts = [ 
+            0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2,
+            0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db,
+            0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB,
+            0x617F2E2fD72FD9D5503197092aC168c91465E7f2,
+            0x17F6AD8Ef982297579C203069C1DbfFE4348c372,
+            0x5c6B0f7Bf3E7ce046039Bd8FABdfD3f9F5021678,
+            0x03C6FcED478cBbC9a4FAB34eF9f40767739D1Ff7,
+            0x1aE0EA34a72D944a8C7603FfB3eC30a6669E454C,
+            0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c,
+            0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C];
+
+        string[10] memory firstNames = ["Rick", "Vanessa", "Alex", "Vici", "Lu", "John", "Sarah", "Samantha", "Peter", "David"];
+        string[10] memory lastNames = ["Patel","Kim","Brown","Davis","Martinez","Wilson","Garcia","Jones","Jackson","Smith"];
+        string[10] memory mailAdresses = [ "Rick.Patel@por.com","Vanessa.Kim@por.com", "Alex.Brown@por.com","Vici.Davis@por.com","Lu.Martinez@por.com","John.Wilson@por.com","Sarah.Garcia@por.com","Samantha.Jones@por.com","Peter.Jackson@por.com","David.Smith@por.com"];
+         for(uint i = 0; i < testAccounts.length; i++)
+        {
+            address acc = testAccounts[i];
+            createAccount(acc, firstNames[i], lastNames[i], mailAdresses[i]);
+            assignRole(acc, Role.MEMBER);
+            removeRole(acc, Role.GUEST);  
+            makeAccountActive(acc);
+        }
+    }
+
 }
 
