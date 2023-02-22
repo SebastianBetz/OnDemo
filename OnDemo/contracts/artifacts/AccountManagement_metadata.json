@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.1+commit.df193b15"
+		"version": "0.8.12+commit.f00d7308"
 	},
 	"language": "Solidity",
 	"output": {
@@ -25,6 +25,19 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "activeMemberCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -83,6 +96,19 @@
 				"name": "createAccount",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getActiveMemberCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -291,7 +317,7 @@
 		"compilationTarget": {
 			"OnDemo/contracts/AccountManagement.sol": "AccountManagement"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -304,11 +330,11 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0xde0c5a2a1d746079718c98fff263e2f6c2607836aa36d8301eef9b0eb89a0763",
+			"keccak256": "0x96d088323595ce1f3e53a033fab463c2eafe7ba5aa52c1b841e3e747b6f910a6",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://0033c5767a722bd382ad23d84a8c4c6244e8000d589d2d70b4ed8b2e431eecb1",
-				"dweb:/ipfs/QmTGvX9aXqCUpP2Aqdg162i8xAVPf3og7QhpYq5SXw8yCX"
+				"bzz-raw://8303e43767364eb0416cb6a4eaeec4eb4bdd4b8715a9e03056b4b2612ae1f976",
+				"dweb:/ipfs/QmRj1ZBtWnsM2j6m25N7PHNh4PdY18LnQ1G6XAUNQQ8JNe"
 			]
 		}
 	},

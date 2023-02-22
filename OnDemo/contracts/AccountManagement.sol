@@ -28,8 +28,21 @@ contract AccountManagement {
         bool isGuest;
     }
 
+    struct LeadershipBoard{
+        uint electionTime;
+        bool approved;
+        address[] members;
+    }
+
+    struct Council{
+        uint electionTime;
+        bool approved;
+        address[] members;
+    }
+
+    uint public activeMemberCount;
     address public owner;
-    mapping(address => User) private users; // all users registered
+    mapping(address => User) private users; // all users registered  
     mapping(address => bool) private activeMembers; // keep track of all users who have a role different to guest and are active, so we know who can vote on referendums
 
     constructor(string memory _firstName, string memory _secondName, string memory _mailAdress) {
@@ -37,9 +50,12 @@ contract AccountManagement {
         createAccount(msg.sender, _firstName, _secondName, _mailAdress);      
         assignRole(msg.sender, Role.LEADER);
         removeRole(msg.sender, Role.GUEST);  
+        makeAccountActive(msg.sender);
     }
 
-    // Modifiers
+    // ------------------------------------
+    // ------------ Modifiers -------------
+    // ------------------------------------
     
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner can call this function.");
@@ -61,39 +77,52 @@ contract AccountManagement {
         _;
     }
 
-    // Account Management
+
+    // ------------------------------------
+    // ------ Account management ----------
+    // ------------------------------------
 
     function createAccount(address _address, string memory _firstName, string memory _secondName, string memory _mailAdress) public userNotExists(_address){
         RoleMap memory roleMap = RoleMap(false, false, false, true);
-        User memory user = User(_address, _firstName, _secondName, _mailAdress, true, roleMap);
+        User memory user = User(_address, _firstName, _secondName, _mailAdress, false, roleMap);
         users[_address] = user;     
     }
 
     function makeAccountActive(address _address) public userExists(_address){
-        User storage user = users[_address];
-        user.isActive = true;
+        if(!activeMembers[_address]){
+            User storage user = users[_address];
+            user.isActive = true;
 
-        // add account to activeMembers
-        RoleMap memory roleMap = user.roleMap;
-        if(roleMap.isLeader || roleMap.isCouncilMember || roleMap.isMember)
-        {
-            activeMembers[_address] = true;
+            // add account to activeMembers
+            RoleMap memory roleMap = user.roleMap;
+            if(roleMap.isLeader || roleMap.isCouncilMember || roleMap.isMember)
+            {
+                activeMembers[_address] = true;
+                activeMemberCount++;
+            }
         }
     }
 
     function makeAccountPassive(address _address) public userExists(_address){
-        User storage user = users[_address];
-        user.isActive = false;
+        if(activeMembers[_address]){
+            User storage user = users[_address];
+            user.isActive = false;
 
-        // remove account from activeMembers
-        activeMembers[_address] = false;
+            // remove account from activeMembers
+            activeMembers[_address] = false;
+            activeMemberCount--;
+        }   
+        
     }
 
-    function burnAccount(address _address) public userExists(_address){
-        delete users[_address];        
+    function burnAccount(address _address) public userExists(_address){  
+        makeAccountPassive(_address);       
+        delete users[_address];         
     }
 
-    // Role management
+   // ------------------------------------
+    // ------ Role management ------------
+    // -----------------------------------
 
     function assignRole(address _address, Role _role) public onlyLeader userExists(_address){
         User storage user = users[_address];
@@ -121,7 +150,7 @@ contract AccountManagement {
             roleMap.isLeader = false;
         }
         else if(_role == Role.COUNCILMEMBER){
-            roleMap.isCouncilMember = false;       
+            roleMap.isCouncilMember = false;     
         }
         else if(_role == Role.MEMBER){
             roleMap.isMember = false;
@@ -129,14 +158,7 @@ contract AccountManagement {
         else if(_role == Role.GUEST){
             roleMap.isGuest = false;            
         }
-
-        if(!roleMap.isLeader && !roleMap.isCouncilMember && !roleMap.isMember)
-        {
-            // remove account from activeMembers
-            activeMembers[_address] = false;
-        }
     }
-
 
     // Setting roles
 
@@ -174,7 +196,13 @@ contract AccountManagement {
         removeRole(_address, Role.GUEST);
     }  
 
-    // Check if user has role
+
+
+
+
+    // -----------------------------------
+    // --------- Role checks -------------
+    // -----------------------------------
 
     function hasRole(address _address, Role _role) private view returns (bool){
         User memory user = users[_address];
@@ -211,7 +239,17 @@ contract AccountManagement {
         return hasRole(_address, Role.GUEST);
     }
 
-    // Check if User has Rights
+
+
+
+
+    // -----------------------------------
+    // ------ External functions ---------
+    // -----------------------------------
+
+    function getActiveMemberCount() public view returns (uint) {
+        return activeMemberCount;
+    }
 
     function hasRightToCreateReferendum(address _address) external view returns (bool) {
         User memory user = users[_address];

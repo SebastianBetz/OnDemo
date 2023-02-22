@@ -11,6 +11,21 @@
 						"internalType": "contract AccountManagement",
 						"name": "_accountManagementAddress",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_description",
+						"type": "string"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -32,11 +47,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "_referendumId",
-						"type": "uint256"
-					},
-					{
 						"internalType": "string",
 						"name": "_title",
 						"type": "string"
@@ -48,14 +58,80 @@
 					}
 				],
 				"name": "addAnswer",
-				"outputs": [
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
 					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
+						"internalType": "address[]",
+						"name": "_owners",
+						"type": "address[]"
 					}
 				],
+				"name": "addOwners",
+				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "addSupport",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "announcementThresholdInDays",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "answers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "creator",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "voterCount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -64,11 +140,6 @@
 						"internalType": "address",
 						"name": "_userAddress",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_referendumId",
-						"type": "uint256"
 					}
 				],
 				"name": "canSupport",
@@ -88,11 +159,6 @@
 						"internalType": "address",
 						"name": "_userAddress",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_referendumId",
-						"type": "uint256"
 					}
 				],
 				"name": "canVote",
@@ -107,11 +173,63 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "cancelationReason",
+				"outputs": [
+					{
+						"internalType": "enum ReferendumManagement.CancelationReason",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "creationDate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "description",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "id",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
-						"internalType": "address[]",
-						"name": "_owners",
-						"type": "address[]"
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
 					},
 					{
 						"internalType": "string",
@@ -124,14 +242,8 @@
 						"type": "string"
 					}
 				],
-				"name": "createReferendum",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
+				"name": "initReferendum",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -156,62 +268,25 @@
 						"type": "uint256"
 					}
 				],
-				"name": "referendums",
+				"name": "owners",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "publicationThresholdInDays",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "id",
+						"name": "",
 						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "title",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "creationDate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "announcementThresholdInDays",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "publicationThresholdInDays",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "voteShareNeededToAnnounce",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "voteShareNeededToPublish",
-						"type": "uint256"
-					},
-					{
-						"internalType": "enum ReferendumManagement.State",
-						"name": "state",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint256",
-						"name": "answerCount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "enum ReferendumManagement.CancelationReason",
-						"name": "cancelationReason",
-						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -221,9 +296,116 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_referendumId",
+						"name": "_answerId",
 						"type": "uint256"
-					},
+					}
+				],
+				"name": "removeAnswer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "removeSupport",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_answerId",
+						"type": "uint256"
+					}
+				],
+				"name": "removeVoteForAnswer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "state",
+				"outputs": [
+					{
+						"internalType": "enum ReferendumManagement.State",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "supporterCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "title",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "viewAnswers",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct ReferendumManagement.Answer[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
 					{
 						"internalType": "uint256",
 						"name": "_answerId",
@@ -231,14 +413,47 @@
 					}
 				],
 				"name": "voteForAnswer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "voteShareNeededToAnnounce",
 				"outputs": [
 					{
-						"internalType": "bool",
+						"internalType": "uint256",
 						"name": "",
-						"type": "bool"
+						"type": "uint256"
 					}
 				],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "voteShareNeededToPublish",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "voterCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -270,19 +485,19 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0xde0c5a2a1d746079718c98fff263e2f6c2607836aa36d8301eef9b0eb89a0763",
+			"keccak256": "0x686d4cb16a932aa7e2ee6e308f44cf8e5ec3836ae4d18ec82c3561d2f9f15c19",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://0033c5767a722bd382ad23d84a8c4c6244e8000d589d2d70b4ed8b2e431eecb1",
-				"dweb:/ipfs/QmTGvX9aXqCUpP2Aqdg162i8xAVPf3og7QhpYq5SXw8yCX"
+				"bzz-raw://9f58e5fae99e95b5f86de0491f14fa180d3250995254825eef8e2c329c226860",
+				"dweb:/ipfs/QmYvLTipzPsmEwfhEtLTTJmrPsBwH7wt7nXgZ5toZhFAKy"
 			]
 		},
 		"OnDemo/contracts/Referendum.sol": {
-			"keccak256": "0xb4fa7bd63991e0bacb508afdcfe7381f29d5c3df9843f66041675007f3da9392",
+			"keccak256": "0x9f7a51d3437f691ab85496239a25ddbed4b5ce20514aa32739a2f8962a437653",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://8179c3bea0f5ebd6a76a77e6a31a70972c46f1136ef0fbc5ad33214f806a674e",
-				"dweb:/ipfs/Qmco1vZbsh3wGVNZwEqikUpbYVmmx89n7RQWjr96PsttSf"
+				"bzz-raw://a01f3b19b7b6768381d70b842cf7d5ea7a3af674f592300d486f5785c53fa6d3",
+				"dweb:/ipfs/QmREKc9ChZmDDrGtR6zqpDvJBd3Gp91htCTeRoosmX2Sqd"
 			]
 		}
 	},

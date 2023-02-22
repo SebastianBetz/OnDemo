@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity 0.8.12;
 
 import "./AccountManagement.sol";
 
-contract ReferendumManagement {
+contract Referendum {
 
     enum CancelationReason {         
-        PUBLICATIONTHRESHOLDNOTREACHED,
-        SUPERVISIONTHRESHOLDNOTREACHED,
+        NOTENOUGHSUPPORTERSFORANNOUNCEMENT,
+        NOTENOUGHSUPPORTERSFORPUBLICATION,
         CANCELEDBYCOUNCIL,
         CANCELEDBYOWNERS
     }
@@ -22,220 +22,86 @@ contract ReferendumManagement {
         CANCELED
     }
 
-    struct Referendum {
-        
-        uint id;
-        string title;
-        string description;
-        uint creationDate;       
-        uint announcementThresholdInDays;
-        uint publicationThresholdInDays;
-        uint voteShareNeededToAnnounce;
-        uint voteShareNeededToPublish;
-        State state;
-        uint answerCount;
-        CancelationReason cancelationReason;        
-        mapping(address => bool) owners;
-        mapping(uint => Answer) answers; // all answers
-        mapping(address => bool) voters;
-        mapping(address => bool) supporters;
-    }
-
     struct Answer {
         uint id;
-        address creator;
+        address owner;
         string title;
         string description;
-        mapping(address => bool) voters;
+        uint voterCount;
     }
 
-    address public owner;
-    AccountManagement public accountManagement;
+    bytes32 public id;
+    address[] public owners;
+    string public title;
+    string public description;
+    uint public creationDate;       
+    Answer[] public answers;
+    uint public announcementThresholdInDays = 28;
+    uint public publicationThresholdInDays = 56;
+    uint public supportShareNeededToAnnounce = 2;
+    uint public supportShareNeededToPublish = 5;
+    uint public voterCount;
+    uint public supporterCount;
+    State public state;
+    CancelationReason public cancelationReason;   
 
-    uint referendumCount;
-    mapping(uint => Referendum) public referendums; // all referendums registered
+    mapping(address => uint) votersToAnswerMapping;
+    mapping(address => bool) supporters;
 
-    constructor(AccountManagement _accountManagementAddress) {
+    AccountManagement private accountManagement;
+
+    constructor(AccountManagement _accountManagementAddress, address[] memory _owners, string memory _title, string memory _description) {
         accountManagement = _accountManagementAddress;
+        initReferendum(_owners, _title, _description);    
     }
 
-    // Manage Referendums
 
-    function createReferendum(string memory _title, string memory _description) public returns (uint) {
-        
+
+
+    // -----------------------------------
+    // ------- Manage Referendums --------
+    // -----------------------------------
+
+    function initReferendum(address[] memory _owners, string memory _title, string memory _description) private returns(bytes32){
+        for(uint i = 0; i < _owners.length; i++)
+        {
+            address owner = _owners[i];
+            if(!accountManagement.hasRightToCreateReferendum(owner))
+            {
+                string memory errorMsg = string.concat("User with address:'", toAsciiString(owner), "' has not permission to create a referendum");
+                revert(errorMsg);
+            }
+        }
+
         // Check if at least one owner has the right to create a referendum: Member / CouncilMember / Leader
-        // todo: check if other owners actually exist!
-        if(accountManagement.hasRightToCreateReferendum(msg.sender))
-        {
-            uint referendumId = referendumCount;
-            referendumCount++;
-
-            uint announcementThresholdInDays = 28;
-            uint publicationThresholdInDays = 28;
-
-            uint voteShareNeededToAnnounce = 2;
-            uint voteShareNeededToPublish = 10;
-
-            uint creationDate = block.timestamp;
-            State state = State.CREATED;
-            uint answerCount = 0;
-
-            Referendum storage ref = referendums[referendumId];
-            ref.id = referendumId;
-            ref.title = _title;
-            ref.description = _description;
-            ref.creationDate = creationDate;
-            ref.announcementThresholdInDays = announcementThresholdInDays;
-            ref.publicationThresholdInDays = publicationThresholdInDays;
-            ref.voteShareNeededToAnnounce = voteShareNeededToAnnounce;
-            ref.voteShareNeededToPublish = voteShareNeededToPublish;
-            ref.state = state;
-            ref.answerCount = answerCount;
-
-            addOwner(ref, msg.sender);
-            return referendumId;
-        }
+        id = generateGUID();
+        title = _title;
+        description = _description;
+        creationDate = block.timestamp;
+        state = State.CREATED;
+        state = state;
+        owners = _owners;
+        return id;
     }
 
-    function addOwner(Referendum storage _ref, address _owner) private{
-        _ref.owners[_owner] = true;
-        _ref.supporters[_owner] = true;
-    }
-
-    function addOwners(uint _referendumId, address[] memory _owners) public{
-        Referendum storage ref = getReferendum(_referendumId);
-        if (ref.state == State.CREATED || ref.state == State.ANNOUNCED || ref.state == State.PUBLISHED) {
-            for (uint i = 0; i < _owners.length; i++) {
-                if(accountManagement.hasRightToCreateReferendum(_owners[i])) {
-                    ref.owners[_owners[i]] = true;
-                    ref.supporters[_owners[i]] = true;
-                }
-            }
-        }
-    }
-
-    function addAnswer(uint _referendumId, string memory _title, string memory _description) public returns (bool) {
-        Referendum storage ref = getReferendum(_referendumId);
-        address user = msg.sender;
-         if (ref.state == State.CREATED || ref.state == State.ANNOUNCED || ref.state == State.PUBLISHED) {
-                uint answerId = ref.answerCount + 1;
-                Answer storage a = ref.answers[answerId];
-                a.id = answerId;
-                a.creator = user;
-                a.title = _title;
-                a.description = _description;
-                ref.answerCount++;
-                return true;
-            }
-        return false;
-    }
-
-    function removeAnswer(uint _referendumId, uint _answerId) public
-    {
-        Referendum storage ref = getReferendum(_referendumId);
-        delete ref.answers[_answerId];
-    }
-    
-    function getReferendum(uint _id) private view returns (Referendum storage){
-        return  referendums[_id];
-    }
-
-    function getAnswer(uint _referendumId, uint _answerId) private view returns (Answer storage){
-        Referendum storage ref = getReferendum(_referendumId);
-        return ref.answers[_answerId];
-    }
-
-
-    // Interact with referendums
-
-    function canSupport(address _userAddress, uint _referendumId) public view returns (bool) {
-        if(accountManagement.hasRightToSupport(_userAddress))
-        {
-            Referendum storage ref = getReferendum(_referendumId);
-            if(ref.state == State.CREATED || ref.state == State.ANNOUNCED || ref.state == State.PUBLISHED)
-            {
-                if(!ref.supporters[_userAddress])
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    function canVote(address _userAddress, uint _referendumId) public view returns (bool) {
-        if(accountManagement.hasRightToVote(_userAddress))
-        {
-            Referendum storage ref = getReferendum(_referendumId);
-            if(ref.state == State.CREATED || ref.state == State.ANNOUNCED || ref.state == State.PUBLISHED)
-            {
-                if(!ref.voters[_userAddress])
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    
-    function voteForAnswer (uint _referendumId, uint _answerId) public returns (bool) {
-        address _userAddress = msg.sender;
-        if(canVote(_userAddress, _referendumId))
-        {
-            Answer storage a = getAnswer(_referendumId, _answerId);
-            if(a.id == _answerId){
-                Referendum storage ref = getReferendum(_referendumId);
-                ref.voters[_userAddress] = true;
-                a.voters[_userAddress] = true;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    
-    function disableReferendum(CancelationReason _reason) private returns (bool) {
-        //advanceReferendumToNextState(State.CANCELED);
-    }
-
-    /*
-    modifier checkDeadlines (uint _timeStamp) {
-        bool referendumIsActive = true;
-        if (_timeStamp > block.timestamp + publicationThresholdInDays){
-            disableReferendum(CancelationReason.PUBLICATIONTHRESHOLDREACHED);
-            referendumIsActive = false;
-        }
-        else if (_timeStamp > block.timestamp + publicationThresholdInDays){
-            disableReferendum(CancelationReason.SUPERVISIONTHRESHOLDREACHED);
-            referendumIsActive = false;
-        }
-        require(referendumIsActive, "ReferendumHasEndedAlready");
+    modifier isActive() {
+        require(state == State.CREATED || state == State.ANNOUNCED || state == State.PUBLISHED, "The referendum must be in an active state.");
         _;
     }
-    */
 
-   /*  function checkParticaptionThreshold() private returns (bool){
-        //checkDeadlines(uint _timeStamp)
-
-        bool canAdvance = false;
-        if (state == State.ANNOUNCED){
-            if (elegibleVoterCount / supporters.length > voteShareNeededToAnnounce){
-                advanceReferendumToNextState(State.ANNOUNCED);
-                canAdvance = true;
-            }
-        } else if (state == State.PUBLISHED){
-            if (elegibleVoterCount / supporters.length > voteShareNeededToPublish){
-                advanceReferendumToNextState(State.PUBLISHED);
-                canAdvance = true;
+    modifier onlyOwners {
+        bool isOwner = false;
+        for (uint i = 0; i < owners.length; i++) {
+            if (msg.sender == owners[i]) {
+                isOwner = true;
+                break;
             }
         }
-        return canAdvance;
+        require(isOwner == true, "Only owners can call this function");
+        _;
     }
 
-    function advanceReferendumToNextState(State _state) public returns (bool) {
-        
-        //checkDeadlines(uint _timeStamp)
+    function setState(State _state) private {        
         string memory stateMessage = "";
 
         if (_state == State.ANNOUNCED) {
@@ -255,8 +121,355 @@ contract ReferendumManagement {
 
          } else {
             stateMessage = "State Not Implemented!";
-            }
-        } */
-
-        //emit(stateMessage);
+        }
     }
+
+    function updateState() public returns (State){
+        // This function needs to be run every x seconds so to check if deadlines have been reached or a certain amount of support has been received
+        if(state == State.CREATED){
+            if(checkAnnouncementDeadlineReached()){
+                if(!checkAnnouncementThresholdReached())
+                {
+                    setState(State.CANCELED);
+                    cancelationReason = CancelationReason.NOTENOUGHSUPPORTERSFORANNOUNCEMENT;
+                }
+                else{
+                    announce();
+                }
+            }
+        } else if (state == State.ANNOUNCED) {
+            if(checkPublicationDeadlineReached()){
+                if(!checkPublicationThresholdReached())
+                {
+                    setState(State.CANCELED);
+                    cancelationReason = CancelationReason.NOTENOUGHSUPPORTERSFORPUBLICATION;
+                }
+                else{
+                    publish();
+                }
+            }
+            state = State.ANNOUNCED;
+
+         } else if (state == State.PUBLISHED){
+             //state = State.PUBLISHED;
+
+         } else if (state == State.ACCEPTED){
+             //state = State.ACCEPTED;
+
+         } else if (state == State.REJECTED){
+             //state = State.REJECTED;
+
+         } else if (state == State.CANCELED){
+             //state = State.CANCELED;
+
+         } else {
+            //stateMessage = "State Not Implemented!";
+        }
+        return state;
+    }
+
+    function announce() public {
+        if(state == State.CREATED)
+        {
+            setState(State.ANNOUNCED);
+        }
+        else{
+            revert("Referendum is in wrong state.");
+        }
+    }
+
+    function publish() private {
+        if(state == State.ANNOUNCED)
+        {
+            setState(State.PUBLISHED);
+        }
+        else{
+            revert("Referendum is in wrong state.");
+        }
+    }
+
+    function disableReferendum(CancelationReason _reason) onlyOwners private {
+        setState(State.CANCELED);
+        cancelationReason = _reason;
+    }
+
+
+
+
+    // -----------------------------------
+    // ---------- Manage owners ----------
+    // -----------------------------------
+
+    function addOwner(address _owner) isActive onlyOwners private{
+        if(accountManagement.hasRightToCreateReferendum(_owner)) {
+            owners.push(_owner);
+            supporterCount++;
+            supporters[_owner] = true;
+        }
+        else{
+            revert('Owner has no right to create Referendum');
+        }
+    }
+
+
+
+
+
+    // -----------------------------------
+    // ------- Manage Answers ------------
+    // -----------------------------------
+
+    modifier onlyAnswerOwner(uint _answerId) {
+        bool isOwner = false;
+        Answer memory a = getAnswer(_answerId);
+        if(a.owner == msg.sender){
+            isOwner = true;
+        }
+
+        require(isOwner == true, "Only owner can call this function.");
+        _;
+    }
+
+    function addAnswer(string memory _title, string memory _description) isActive onlyOwners public {
+        // answers are connected to referendums
+        // answer ids start with 1000 to be able to distniguish in the mapping who has voted for an answer and who hasn't (meaning returning a value of 0)
+        address user = msg.sender;               
+        uint answerId = answers.length + 1000;
+        Answer memory a = Answer(answerId, user, _title, _description, 0);       
+        answers.push(a);            
+    }
+
+    function getAnswer(uint _answerId) private view returns (Answer storage) {
+        for(uint i; i < answers.length; i++)        {
+            if(answers[i].id == _answerId){
+                return answers[i];
+            }
+        }
+        revert('Not found');
+    }
+
+    function viewAnswers() public view returns (Answer[] memory) {
+        return answers;
+    }
+
+    function disableAnswer(uint _answerId) onlyAnswerOwner(_answerId) isActive onlyOwners public {
+        Answer storage a = getAnswer(_answerId);
+        if(a.voterCount == 0){
+            delete answers[_answerId];
+        }
+        else{
+            revert("Can't remove answer which already holds votes");
+        }
+    }   
+
+
+
+
+    // -----------------------------------
+    // ------- Manage Voting ------------
+    // -----------------------------------
+
+    function voteForAnswer (uint _answerId) isActive public {
+        address _userAddress = msg.sender;
+        bool success = false;
+        if(canVote())
+        {
+            Answer storage a = getAnswer(_answerId);
+            uint oldAnswerId = votersToAnswerMapping[_userAddress];
+            if(oldAnswerId != 0){
+                //need to remove previous vote
+                Answer storage oldAnswer = getAnswer(oldAnswerId);
+                oldAnswer.voterCount--;
+            }
+            else if(oldAnswerId == _answerId){
+                revert('User already voted for this answer');
+            }
+            else {
+                voterCount++;
+            }
+            
+            votersToAnswerMapping[_userAddress] = _answerId;
+            a.voterCount++;
+            success = true;
+        }
+
+        if(!success){
+            revert('Unable to cast vote');
+        }
+    }
+
+    function removeVoteForAnswer() isActive public {
+        address _userAddress = msg.sender;
+        bool success = false;
+        uint answerId = votersToAnswerMapping[_userAddress];
+        if(answerId != 0)
+        {
+            // Take care of data in answer
+            Answer storage a = getAnswer(answerId);            
+            a.voterCount--;
+            //Take care of data in referendum
+            votersToAnswerMapping[_userAddress] = 0;
+            voterCount--;
+            success = true;
+        }
+        else{
+            revert('User did non vote for this answer');
+        }        
+
+        if(!success){
+            revert('Unable to remove vote');
+        }
+    }
+
+
+
+
+
+    // -----------------------------------
+    // ------- Manage Support ------------
+    // -----------------------------------
+
+    function addSupport() isActive public {
+        if(canSupport()){
+            if(supporters[msg.sender] == false){
+                supporters[msg.sender] = true;
+                supporterCount++;
+                updateState();
+            }
+            else{
+                revert('User supports this referendum already');
+            }
+        }
+    }
+
+    function removeSupport() isActive public {
+        if(supporters[msg.sender] == true){
+            supporters[msg.sender] = false;
+            supporterCount--;
+        }
+        else{
+            revert('User did not support this referendum');
+        }
+    }
+    
+
+
+
+
+
+    // -----------------------------------
+    // ------- Check Rights --------------
+    // -----------------------------------
+
+    function canSupport() public view isActive returns (bool) {
+        address _userAddress = msg.sender;
+        if(accountManagement.hasRightToSupport(_userAddress))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    function canVote() public view isActive returns (bool) {
+        address _userAddress = msg.sender;
+        if(accountManagement.hasRightToVote(_userAddress))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    // todo: Delete
+    function getMinSupportCount() public view returns (uint){
+        uint elegibleVoterCount = accountManagement.getActiveMemberCount();
+        uint minSupporterCount = divideAndRoundUp(elegibleVoterCount * supportShareNeededToAnnounce, 100);
+        return minSupporterCount;
+    }
+
+    function checkAnnouncementThresholdReached() public view isActive returns (bool){
+        bool reached = false;
+        uint elegibleVoterCount = accountManagement.getActiveMemberCount();
+        uint minSupporterCount = divideAndRoundUp(elegibleVoterCount * 100, supportShareNeededToAnnounce);
+
+        if(supporterCount > minSupporterCount){
+            reached = true;
+        }
+        return reached;    
+    }
+
+    function checkPublicationThresholdReached() public view isActive returns (bool){
+        bool reached = false;
+        uint elegibleVoterCount = accountManagement.getActiveMemberCount();
+        uint minSupporterCount = divideAndRoundUp(elegibleVoterCount * 100, supportShareNeededToPublish);
+
+        if(supporterCount > minSupporterCount){
+            reached = true;
+        }
+        return reached;    
+    }
+
+    function checkAnnouncementDeadlineReached() public view isActive returns(bool){
+        bool deadlineReached = false;
+        uint timestamp = block.timestamp;
+        uint publicationDeadline = creationDate + (announcementThresholdInDays * 1 days);
+
+        if (timestamp > publicationDeadline){
+            deadlineReached = true;
+        }
+        return deadlineReached;
+    }
+
+    function checkPublicationDeadlineReached() public view isActive returns(bool){
+        bool deadlineReached = false;
+        uint timestamp = block.timestamp;
+        uint publicationDeadline = creationDate + (announcementThresholdInDays + publicationThresholdInDays * 1 days);
+
+        if (timestamp > publicationDeadline){
+            deadlineReached = true;
+        }
+        return deadlineReached;
+    }
+
+
+
+    // -----------------------------------
+    // ------------- Utils ---------------
+    // -----------------------------------
+
+
+    function toAsciiString(address x) internal pure returns (string memory) {
+        bytes memory s = new bytes(40);
+        for (uint i = 0; i < 20; i++) {
+            bytes1 b = bytes1(uint8(uint(uint160(x)) / (2**(8*(19 - i)))));
+            bytes1 hi = bytes1(uint8(b) / 16);
+            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
+            s[2*i] = char(hi);
+            s[2*i+1] = char(lo);            
+        }
+        return string(s);
+    }
+
+    function char(bytes1 b) internal pure returns (bytes1 c) {
+        if (uint8(b) < 10) {
+            return bytes1(uint8(b) + 0x30);
+        }
+        else {
+            return bytes1(uint8(b) + 0x57);
+        }
+    }
+
+    function generateGUID() internal view returns (bytes32) {
+        uint nonce = 0;
+        uint rand = uint(keccak256(abi.encodePacked(nonce, block.timestamp, block.difficulty, block.coinbase)));
+        nonce++;
+        return bytes32(rand);
+    }
+
+    function divideAndRoundUp(uint numerator, uint denominator) public pure returns (uint256) {
+        uint256 quotient = numerator / denominator;
+        if (numerator % denominator != 0) {
+            quotient = quotient + 1;
+        }
+        return quotient;
+    }
+}
