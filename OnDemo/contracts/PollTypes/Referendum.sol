@@ -42,7 +42,7 @@ contract Referendum {
 
     constructor(AccountManagement _accountManagementAddress, address[] memory _owners, string memory _title, string memory _description) {
         accountManagement = _accountManagementAddress;
-        poll = new Poll(_accountManagementAddress, _owners, _title, _description);        
+        poll = new Poll(_owners, _title, _description);        
         utils = new Utils();
     }
 
@@ -52,29 +52,29 @@ contract Referendum {
     }
 
     // -----------------------------------
-    // ------- Manage Answers ------------
+    // ------- Manage Options ------------
     // -----------------------------------
 
-    function addAnswer(string memory _title, string memory _description) public {
-        // answers are connected to polls
-        // answer ids start with 1000 to be able to distniguish in the mapping who has voted for an answer and who hasn't (meaning returning a value of 0)
-        poll.addAnswer(_title, _description);                  
+    function addOption(string memory _title, string memory _description) public {
+        // options are connected to polls
+        // option ids start with 1000 to be able to distniguish in the mapping who has voted for an option and who hasn't (meaning returning a value of 0)
+        poll.addOption(msg.sender, true, _title, _description);                  
     }
 
-    function disableAnswer(uint _answerId) public {
-        poll.disableAnswer(_answerId);
+    function disableOption(uint _optionId) public {
+        poll.disableOption(_optionId);
     }   
 
     // -----------------------------------
     // ------- Manage Voting ------------
     // -----------------------------------
 
-    function voteForAnswer (uint _answerId) public {
-        poll.voteForAnswer(_answerId);
+    function voteForOption (uint _optionId) public {
+        poll.voteForOption(_optionId);
     }
 
-    function removeVoteForAnswer() public {
-        poll.removeVoteForAnswer();
+    function removeVoteForOption() public {
+        poll.removeVoteForOption();
     }
 
 
@@ -115,7 +115,12 @@ contract Referendum {
     // -----------------------------------
 
     function canCreate() public view returns (bool) {
-
+        address _userAddress = msg.sender;
+        if(accountManagement.hasLeaderRole(_userAddress) || accountManagement.hasCouncilMemberRole(_userAddress) || accountManagement.hasMemberRole(_userAddress))
+        {
+            return true;
+        }
+        return false;
     }
 
     function canSupport() public view returns (bool) {
@@ -178,5 +183,38 @@ contract Referendum {
             deadlineReached = true;
         }
         return deadlineReached;
+    }
+
+        function hasRightToCreateReferendum(address _address) external view returns (bool) {
+        User memory user = users[_address];
+        if(user.userAddress != address(0))
+        {
+            if(user.isActive && (user.roleMap.isLeader || user.roleMap.isCouncilMember || user.roleMap.isMember)){
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    function hasRightToVote(address _address) external view returns (bool) {
+        User memory user = users[_address];
+        if(user.userAddress != address(0))
+        {
+            if(user.isActive && (user.roleMap.isLeader || user.roleMap.isCouncilMember || user.roleMap.isMember)){
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    function hasRightToSupport(address _address) external view returns (bool) {
+        User memory user = users[_address];
+        if(user.userAddress != address(0))
+        {
+            if(user.isActive && (user.roleMap.isLeader || user.roleMap.isCouncilMember || user.roleMap.isMember)){
+                return true;
+            }
+        }
+        return  false;
     }
 }

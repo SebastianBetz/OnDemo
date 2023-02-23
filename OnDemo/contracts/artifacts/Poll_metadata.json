@@ -8,11 +8,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "contract AccountManagement",
-						"name": "_accountManagementAddress",
-						"type": "address"
-					},
-					{
 						"internalType": "address[]",
 						"name": "_owners",
 						"type": "address[]"
@@ -64,13 +59,23 @@
 			},
 			{
 				"inputs": [],
-				"name": "activatePoll",
+				"name": "activate",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_owner",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "_enabled",
+						"type": "bool"
+					},
 					{
 						"internalType": "string",
 						"name": "_title",
@@ -82,48 +87,9 @@
 						"type": "string"
 					}
 				],
-				"name": "addAnswer",
+				"name": "addOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "answers",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "title",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "voterCount",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -140,36 +106,86 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "disable",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_answerId",
+						"name": "_optionId",
 						"type": "uint256"
 					}
 				],
-				"name": "disableAnswer",
+				"name": "disableOption",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_optionId",
+						"type": "uint256"
+					}
+				],
+				"name": "enableOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "disablePoll",
+				"name": "freeze",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "freezePoll",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getAnswers",
+				"name": "getCreationDate",
 				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getDescription",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getOptionCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
 					{
 						"components": [
 							{
@@ -181,6 +197,16 @@
 								"internalType": "address",
 								"name": "owner",
 								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
 							},
 							{
 								"internalType": "string",
@@ -198,7 +224,65 @@
 								"type": "uint256"
 							}
 						],
-						"internalType": "struct Poll.Answer[]",
+						"internalType": "struct Poll.Option",
+						"name": "_o",
+						"type": "tuple"
+					}
+				],
+				"name": "getOptionId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getOptions",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Poll.Option[]",
 						"name": "",
 						"type": "tuple[]"
 					}
@@ -208,12 +292,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "getCreationDate",
+				"name": "getTitle",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "",
-						"type": "uint256"
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -248,6 +332,111 @@
 			{
 				"inputs": [
 					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Poll.Option",
+						"name": "_o",
+						"type": "tuple"
+					}
+				],
+				"name": "isOptionActive",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "options",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "creator",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isActive",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "voterCount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -266,7 +455,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "removeVoteForAnswer",
+				"name": "removeVoteForOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -301,11 +490,11 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_answerId",
+						"name": "_optionId",
 						"type": "uint256"
 					}
 				],
-				"name": "voteForAnswer",
+				"name": "voteForOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -351,20 +540,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0xb10d64e6d1c12de6acc6cf01f370b788048a80765218437be0121dce43a08b9e",
-			"license": "GPL-3.0",
-			"urls": [
-				"bzz-raw://edec82a2f0a6a5b9d2f374facdf8502153835e65a45111feed0203dfe1fa2b06",
-				"dweb:/ipfs/QmTBR1dDWR3gqBkae1KkwhnNyyYszMrqW11aNN1rMwwnbv"
-			]
-		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x30141e17fc88804f68a25da049679b48aadd0ed63e87189511e1a0d38839b359",
+			"keccak256": "0x97f0818b10ca85c05dd91545be14ad5bbcb67cd62f04ec0acf06e4ffb03bdda6",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://c750e1af7f552e435ac2f8878ce7c944e414c1dc51974ce4cc697ad94557952c",
-				"dweb:/ipfs/QmcPL48q4mkGvo7PR7wrN7trDMLRmQA2cNH19afbVk3CPJ"
+				"bzz-raw://9601f35f7b4bb295de29bad24054d9608e687011d6534b46e63f043769c4e6c1",
+				"dweb:/ipfs/QmPuzV3Eba9e8s8cJ9ExJWEDRd6dkwgYzVdBTW9YoBCNUG"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

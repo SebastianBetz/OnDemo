@@ -7,27 +7,13 @@ import "../Poll.sol";
 import "../Utils.sol";
 
 contract Consultation {
+    // A consultation contract that uses the polling interface
+    // A consultation can have only two answers, has a deadline and needs to be started by a council member
+    // A consultation extends the polling interface to include role based rights inherited from the accountmanagement contract
 
-    enum CancelationReason { 
-        DRAW,        
-        NOTENOUGHVOTERTURNOUT,
-        CANCELEDBYCOUNCIL
-    }
-
-    enum State { 
-        CREATED,
-        APPROVED,
-        RUNNING,        
-        CONFIRMED,
-        REJECTED,
-        CANCELED
-    }
-
-    enum Result{
-        AYES,
-        NOES,
-        DRAW
-    }
+    enum CancelationReason { DRAW, NOTENOUGHVOTERTURNOUT, CANCELEDBYCOUNCIL }
+    enum State { CREATED, APPROVED, RUNNING, CONFIRMED, REJECTED, CANCELED }
+    enum Result{ AYES, NOES, DRAW }
 
     event StateChanged(
         address indexed _by,
@@ -44,23 +30,13 @@ contract Consultation {
     State public state;
     CancelationReason public cancelationReason;   
 
-    AccountManagement private accountManagement;
+    AccountManagement private accMng;
     Poll private poll;
     Utils private utils;
 
-    constructor(AccountManagement _accountManagementAddress, address[] memory _owners, string memory _title, string memory _description, string memory _confirmTitle, string memory _confirmDescription, string memory _rejectTitle, string memory _rejectDescription) {        
-        accountManagement = _accountManagementAddress;
-        if(canCreate(_owners)) {
-            utils = new Utils();
-            poll = new Poll(_accountManagementAddress, _owners, _title, _description);  
-            poll.addAnswer(_confirmTitle, _confirmDescription);       
-            poll.addAnswer(_rejectTitle, _rejectDescription);  
-            owners = _owners;              
-            setState(State.CREATED, "Consultation created!");
-        }
-        else{
-            revert("One or more users can't create a consultation!");
-        }        
+    constructor(AccountManagement _accMngAddress, address[] memory _owners, string memory _title, string memory _description, string memory _confirmTitle, string memory _confirmDescription, string memory _rejectTitle, string memory _rejectDescription) {        
+        accMng = _accMngAddress;
+        create(_owners, _title, _description, _confirmTitle, _confirmDescription, _rejectTitle, _rejectDescription);  
     }
 
     modifier isActive() {
@@ -85,7 +61,21 @@ contract Consultation {
     // ------- Manage Life Cycle ---------
     // -----------------------------------
 
-    function approveConsultation(address[] memory _guaranteers) public {
+    function create(address[] memory _owners, string memory _title, string memory _description, string memory _confirmTitle, string memory _confirmDescription, string memory _rejectTitle, string memory _rejectDescription) private{
+        if(canCreate(_owners)) {
+            utils = new Utils();
+            poll = new Poll(_owners, _title, _description, true);  
+            poll.addOption(msg.sender, true, _confirmTitle, _confirmDescription);       
+            poll.addOption(msg.sender, true, _rejectTitle, _rejectDescription);  
+            owners = _owners;              
+            setState(State.CREATED, "Consultation created!");
+        }
+        else{
+            revert("One or more users can't create a consultation!");
+        }       
+    }
+
+    function approve(address[] memory _guaranteers) public {
         if(state == State.CREATED)
         {
             if(canApprove(_guaranteers))
@@ -101,7 +91,7 @@ contract Consultation {
         }
     }
 
-    function startConsultation(address[] memory _leaders) public {
+    function start(address[] memory _leaders) public {
         if(state == State.APPROVED)
         {
              if(canStart(_leaders))
@@ -118,7 +108,7 @@ contract Consultation {
        
     }
 
-    function finishConsultation() private {
+    function finish() private {
         if(state == State.RUNNING)
         {
             if(hasMinimumVoterTurnout())
@@ -133,11 +123,11 @@ contract Consultation {
                     setState(State.REJECTED, "Noes have it!");
                 }
                 else{
-                    cancelConsultation(CancelationReason.DRAW, "It's a draw!");
+                    cancel(CancelationReason.DRAW, "It's a draw!");
                 }
             }
             else{
-                cancelConsultation(CancelationReason.NOTENOUGHVOTERTURNOUT, "Consultation canceled: Voter turnout has been too small!");
+                cancel(CancelationReason.NOTENOUGHVOTERTURNOUT, "Consultation canceled: Voter turnout has been too small!");
             }     
         }
         else{
@@ -145,17 +135,17 @@ contract Consultation {
         }           
     }
 
-    function cancelConsultationByCouncil() public {
+    function cancelByCouncil() public {
         if(canCancel())
         {
-            cancelConsultation(CancelationReason.CANCELEDBYCOUNCIL, "Consultation canceled by Council!");
+            cancel(CancelationReason.CANCELEDBYCOUNCIL, "Consultation canceled by Council!");
         }
         else{
             revert("Only Members of the council can cancel consultations.");
         }
     }
 
-    function cancelConsultation(CancelationReason _reason, string memory _description) private {
+    function cancel(CancelationReason _reason, string memory _description) private {
         setState(State.CANCELED, _description);
         cancelationReason = _reason;
     }
@@ -166,16 +156,16 @@ contract Consultation {
     // -----------------------------------
 
     function getConfirmCount() public view returns (uint) {
-        Poll.Answer[] memory answers = poll.getAnswers();
-        Poll.Answer memory confirmAnswer = answers[0];
-        uint confirmCount = confirmAnswer.voterCount;
+        Poll.Option[] memory options = poll.getOptions();
+        Poll.Option memory confirmOption = options[0];
+        uint confirmCount = confirmOption.voterCount;
         return confirmCount;
     }
 
     function getRejectCount() public view returns (uint) {
-        Poll.Answer[] memory answers = poll.getAnswers();
-        Poll.Answer memory confirmAnswer = answers[1];
-        uint rejectCount = confirmAnswer.voterCount;
+        Poll.Option[] memory options = poll.getOptions();
+        Poll.Option memory confirmOption = options[1];
+        uint rejectCount = confirmOption.voterCount;
         return rejectCount;
     }
 
@@ -215,12 +205,12 @@ contract Consultation {
         vote(1001);
     }
 
-    function vote (uint _answerId) private {
-        poll.voteForAnswer(_answerId);
+    function vote (uint _optionId) private {
+        poll.voteForOption(_optionId);
     }
 
     function removeVote() isActive public {
-        poll.removeVoteForAnswer();
+        poll.removeVoteForOption();
     }
 
 
@@ -232,7 +222,7 @@ contract Consultation {
     function canCreate(address[] memory _creators) public view returns (bool) {
         bool can = true;
         for (uint i = 0; i < _creators.length; i++) {
-            if(!accountManagement.hasLeaderRole(_creators[i]))
+            if(!accMng.hasLeaderRole(_creators[i]))
             {
                 can = false;
             }
@@ -243,7 +233,7 @@ contract Consultation {
     function canApprove(address[] memory _guaranteers) public view returns (bool) {
         bool can = true;
         for (uint i = 0; i < _guaranteers.length; i++) {
-            if(!accountManagement.hasCouncilMemberRole(_guaranteers[i]))
+            if(!accMng.hasCouncilMemberRole(_guaranteers[i]))
             {
                 can = false;
             }
@@ -254,7 +244,7 @@ contract Consultation {
     function canStart(address[] memory _creators) public view returns (bool) {
         bool can = true;
         for (uint i = 0; i < _creators.length; i++) {
-            if(!accountManagement.hasLeaderRole(_creators[i]))
+            if(!accMng.hasLeaderRole(_creators[i]))
             {
                 can = false;
             }
@@ -264,7 +254,7 @@ contract Consultation {
 
     function canVote() public view returns (bool) {
         address _userAddress = msg.sender;
-        if(accountManagement.hasRightToVote(_userAddress))
+        if(accMng.hasMemberRole(_userAddress) || accMng.hasCouncilMemberRole(_userAddress) || accMng.hasLeaderRole(_userAddress))
         {
             return true;
         }
@@ -273,7 +263,7 @@ contract Consultation {
 
     function canCancel() public view returns (bool) {
         address _userAddress = msg.sender;
-        if(accountManagement.hasCouncilMemberRole(_userAddress))
+        if(accMng.hasCouncilMemberRole(_userAddress))
         {
             return true;
         }

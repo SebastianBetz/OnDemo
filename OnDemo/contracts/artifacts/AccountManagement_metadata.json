@@ -14,7 +14,7 @@
 					},
 					{
 						"internalType": "string",
-						"name": "_secondName",
+						"name": "_lastName",
 						"type": "string"
 					},
 					{
@@ -27,16 +27,16 @@
 				"type": "constructor"
 			},
 			{
-				"inputs": [],
-				"name": "activeMemberCount",
-				"outputs": [
+				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
 					}
 				],
-				"stateMutability": "view",
+				"name": "activateAccount",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -84,7 +84,7 @@
 					},
 					{
 						"internalType": "string",
-						"name": "_secondName",
+						"name": "_lastName",
 						"type": "string"
 					},
 					{
@@ -94,6 +94,19 @@
 					}
 				],
 				"name": "createAccount",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "deactivateAccount",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -135,7 +148,7 @@
 							},
 							{
 								"internalType": "string",
-								"name": "secondName",
+								"name": "lastName",
 								"type": "string"
 							},
 							{
@@ -261,89 +274,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
-					}
-				],
-				"name": "hasRightToCreateReferendum",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
-					}
-				],
-				"name": "hasRightToSupport",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
-					}
-				],
-				"name": "hasRightToVote",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
-					}
-				],
-				"name": "makeAccountActive",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
-					}
-				],
-				"name": "makeAccountPassive",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -380,6 +310,25 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "userExists",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -403,18 +352,18 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0xb10d64e6d1c12de6acc6cf01f370b788048a80765218437be0121dce43a08b9e",
+			"keccak256": "0xdf8e0587f8c87d7398ac231d94b17f7608fef85c27b85ac53a0210cdfa75c78d",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://edec82a2f0a6a5b9d2f374facdf8502153835e65a45111feed0203dfe1fa2b06",
-				"dweb:/ipfs/QmTBR1dDWR3gqBkae1KkwhnNyyYszMrqW11aNN1rMwwnbv"
+				"bzz-raw://96a75d65884b21ad06dccf68671b82bb3b8c0cbaee78c5337bb79d903043fe40",
+				"dweb:/ipfs/QmZWKgjGUG3ythVnWQn6yXBj2NYWLnQd5RtXvd3zXd4xwi"
 			]
 		}
 	},

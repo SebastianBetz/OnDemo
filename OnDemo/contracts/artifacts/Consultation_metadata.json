@@ -1,155 +1,14 @@
 {
 	"compiler": {
-		"version": "0.8.1+commit.df193b15"
+		"version": "0.8.12+commit.f00d7308"
 	},
 	"language": "Solidity",
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_index",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "_title",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_description",
-						"type": "string"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_newDscription",
-						"type": "string"
-					}
-				],
-				"name": "changeDescription",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_newTitle",
-						"type": "string"
-					}
-				],
-				"name": "changeTitle",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "description",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "disable",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getResult",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "index",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "title",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "voteAgainst",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "voteAgainstCount",
-				"outputs": [
-					{
-						"internalType": "int256",
-						"name": "",
-						"type": "int256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "votePro",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "voteProCount",
-				"outputs": [
-					{
-						"internalType": "int256",
-						"name": "",
-						"type": "int256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -165,9 +24,9 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Consultation.sol": "Consultation"
+			"OnDemo/contracts/Test.sol": "Consultation"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -179,12 +38,44 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/Consultation.sol": {
-			"keccak256": "0x896d77c4ad6aefe51b597efe89b407ee55d1f341cac77b0789c49ec576fb47d2",
-			"license": "MIT",
+		"OnDemo/contracts/AccountManagement.sol": {
+			"keccak256": "0x45f058bce10f81d18dbcd2b7b94548933e602b89e64b813d70d5972e628f90d0",
+			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://c0043946bee00cbc43c7b1e958095551a9e077aac92a9058474fca2f8d1b92c2",
-				"dweb:/ipfs/QmadqzuD6qEEyXvpsZPR87X6jnmJrYzPzA5amafX2kLMMK"
+				"bzz-raw://a5e5d74d27eeda576347dc2c943a5e891c4bb7164381291d9fc727488254c6d7",
+				"dweb:/ipfs/QmXFvdJf61YhNTo8i2dH7segVtdoN6zaMgUoavTzBzoBgY"
+			]
+		},
+		"OnDemo/contracts/Poll.sol": {
+			"keccak256": "0x6deedf247a1cb92fea33337fb9ce661e188154bbed5b7d426cf48e1c87893a09",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2689b604f69806a3e54bec45f74ecd8469db80325f1491a0ba1d3c84b2e62b77",
+				"dweb:/ipfs/Qmdw9GLgH5NPaj7Q8vDVbazB683uBTGjbmQvy1WWJeMpcb"
+			]
+		},
+		"OnDemo/contracts/PollTypes/Election.sol": {
+			"keccak256": "0x8e81ccd38667e2ee84971ceae86dcf6448dd79e7e014aa691b15c60019594522",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://bb7db41f5c0a93695294ad4f9778592cc619db8333d6087b5adb4c35900584ce",
+				"dweb:/ipfs/QmQicnxHFGE1eH6SGKuL8e72zRrtavkyAbQnVbV81rcQbS"
+			]
+		},
+		"OnDemo/contracts/Test.sol": {
+			"keccak256": "0xce22247b3381c4038b5342d51a3cf6f8d3ccf4ac630ba9a6a8b3bfc01aeb3c75",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://708f76d78e84d2cd2f3ae7f9bc9d0ddcbfc875cb9f3c6c04e01d98e1e9e11264",
+				"dweb:/ipfs/QmQGyBgsGYR2Lou7DibMi9oTzvhe6hX7RMLdQyKKcK732f"
+			]
+		},
+		"OnDemo/contracts/Utils.sol": {
+			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a3dba6bcd21589f42c8cee255fc587ad4f5e442ee53a89a987d67e70784d4974",
+				"dweb:/ipfs/QmQLwgfrxyEPyQQQcU3F7mBXzWu3CzSJRMFnMBFXYfx751"
 			]
 		}
 	},

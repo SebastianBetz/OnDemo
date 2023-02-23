@@ -1,0 +1,109 @@
+{
+	"compiler": {
+		"version": "0.8.12+commit.f00d7308"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "createAccountManagement",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "createConsultation",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"OnDemo/contracts/Test.sol": "Test"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"OnDemo/contracts/AccountManagement.sol": {
+			"keccak256": "0x2294ee3209aa124d206f6ee9ac1e1f78b3587d017fd142618c52177f53e2477f",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://656349c97bfefde745d96f2d2d22f10319a239d0bfc1c6cfe22f80636b9418a4",
+				"dweb:/ipfs/QmNPX8c9wnF2UmRCh34b9SVKeEswebRk3YNRR6My3pP3D6"
+			]
+		},
+		"OnDemo/contracts/Poll.sol": {
+			"keccak256": "0x6deedf247a1cb92fea33337fb9ce661e188154bbed5b7d426cf48e1c87893a09",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2689b604f69806a3e54bec45f74ecd8469db80325f1491a0ba1d3c84b2e62b77",
+				"dweb:/ipfs/Qmdw9GLgH5NPaj7Q8vDVbazB683uBTGjbmQvy1WWJeMpcb"
+			]
+		},
+		"OnDemo/contracts/PollTypes/Consultation.sol": {
+			"keccak256": "0x1ee3631c326d38852044ec94e3d8472d5412a7a7c48a29f40798ab66f1937ceb",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://f6253d62f934150db3f885c78bb8e62a0a6197a80fa16f625a1ca51d2e58979b",
+				"dweb:/ipfs/QmYLAdB5xqrPYJAY4YQeUfKa7cUqBHaW8Dp8k3Yjeuqo6e"
+			]
+		},
+		"OnDemo/contracts/Test.sol": {
+			"keccak256": "0x5d920e59ac6d7c19a4fd4bf54b712cf288c7303e14a4c3d4d5982eb75cbe8e5c",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2a75f5cc5d3aa1a217edec6cb1cb418decbf44c7f0c8e5fa1d069e05c26a5310",
+				"dweb:/ipfs/QmNyqbitc51XUTcs2ZsTQ1hU7oPcTC699YgbaqKsdULY8F"
+			]
+		},
+		"OnDemo/contracts/Utils.sol": {
+			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a3dba6bcd21589f42c8cee255fc587ad4f5e442ee53a89a987d67e70784d4974",
+				"dweb:/ipfs/QmQLwgfrxyEPyQQQcU3F7mBXzWu3CzSJRMFnMBFXYfx751"
+			]
+		}
+	},
+	"version": 1
+}

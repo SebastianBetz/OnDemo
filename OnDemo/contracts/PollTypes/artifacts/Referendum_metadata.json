@@ -44,7 +44,7 @@
 						"type": "string"
 					}
 				],
-				"name": "addAnswer",
+				"name": "addOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -177,11 +177,11 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_answerId",
+						"name": "_optionId",
 						"type": "uint256"
 					}
 				],
-				"name": "disableAnswer",
+				"name": "disableOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -227,7 +227,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "removeVoteForAnswer",
+				"name": "removeVoteForOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -288,11 +288,11 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_answerId",
+						"name": "_optionId",
 						"type": "uint256"
 					}
 				],
-				"name": "voteForAnswer",
+				"name": "voteForOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -319,34 +319,34 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x185025fc8431c4230814b6a86877ca828e0234a7c3b29a85750f06ca1b8e35b8",
+			"keccak256": "0x45f058bce10f81d18dbcd2b7b94548933e602b89e64b813d70d5972e628f90d0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://fa53dc27088b1a84a906ad6843814c911b5b3a9d1988f7b8a696387375ae6e5b",
-				"dweb:/ipfs/QmVHe4K1CF1k5F3aUrVAT279CkDGcPG5KJr6gwHYWjEFa2"
+				"bzz-raw://a5e5d74d27eeda576347dc2c943a5e891c4bb7164381291d9fc727488254c6d7",
+				"dweb:/ipfs/QmXFvdJf61YhNTo8i2dH7segVtdoN6zaMgUoavTzBzoBgY"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x7a2ceb8d064714f80349bbf4ac3bad680b4ea170a019f5193b02aff7c4f713de",
+			"keccak256": "0xfd891ec0b2249e4bcd9df86ebeeb005a504931baa68411de417f33ac4ad5edfa",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://2fe04054badd37eb67d0f48f0761fe86b6262efb81a9854d29d7162c4470c614",
-				"dweb:/ipfs/QmcUTpeXMhJncrxZaFaWiDDq2xcDG87BappJom9UgCaJZY"
+				"bzz-raw://673770fc5bba3f50f5d0d6dacba141236f4e76bb8d11064a2c9b01489c1aa8d5",
+				"dweb:/ipfs/QmbLZow1fhFvCurbNd12fiAzYq3vBUz5ruoL8vYCZYoB4r"
 			]
 		},
 		"OnDemo/contracts/PollTypes/Referendum.sol": {
-			"keccak256": "0xe7874c2faf893828b83f0ada305c144c3367993c68b99e25c9bc4a6a1e59d1d2",
+			"keccak256": "0x6fcbb4cd18caed6fb242a899663ea5ea987bafe5dd846ce568dbd6ea98ae439d",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://35bec61003f8e2931397485f03397a2318fd97400af3c6f7b3ade046f06a2ebb",
-				"dweb:/ipfs/QmZVSDCvhPb2XsqEpNwshFtFYkvEsq767sGgSTg8xr7ZB6"
+				"bzz-raw://c8847cc786131a921ae21d19e2bb8fffa87d9ba971768f4472aaad1b8cfdfd9a",
+				"dweb:/ipfs/QmRqU8Ygb49HpHscB2cjznVNXZgXW4D6cC6TQAszR3uszs"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

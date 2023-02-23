@@ -1,20 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity 0.8.12;
 
 contract AccountManagement {
     
-    enum Role { 
-        LEADER,
-        COUNCILMEMBER,
-        MEMBER,
-        GUEST
-    }
+    // A contract to create, active, deactivate, remove users
+    // Allows users to take roles
+    // Allows
+
+    enum Role { LEADER, COUNCILMEMBER, MEMBER, GUEST }
 
     struct User {
         address userAddress;
         string firstName;
-        string secondName;
+        string lastName;
         string mailAdress;
         bool isActive;
         RoleMap roleMap;
@@ -28,29 +27,31 @@ contract AccountManagement {
         bool isGuest;
     }
 
+    // the current leadership
     struct LeadershipBoard{
         uint electionTime;
         bool approved;
         address[] members;
     }
 
+    // the current council
     struct Council{
         uint electionTime;
         bool approved;
         address[] members;
     }
 
-    uint public activeMemberCount;
+    uint private activeMemberCount; // keep track of how many users with at least the Role "Member" exist, which are active
     address public owner;
     mapping(address => User) private users; // all users registered  
     mapping(address => bool) private activeMembers; // keep track of all users who have a role different to guest and are active, so we know who can vote on referendums
 
-    constructor(string memory _firstName, string memory _secondName, string memory _mailAdress) {
+    constructor(string memory _firstName, string memory _lastName, string memory _mailAdress) {
         owner = msg.sender;
-        createAccount(msg.sender, _firstName, _secondName, _mailAdress);      
+        createAccount(msg.sender, _firstName, _lastName, _mailAdress);      
         assignRole(msg.sender, Role.LEADER);
         removeRole(msg.sender, Role.GUEST);  
-        makeAccountActive(msg.sender);
+        activateAccount(msg.sender);
     }
 
     // ------------------------------------
@@ -67,12 +68,12 @@ contract AccountManagement {
         _;
     }
 
-    modifier userExists(address _address){
+    modifier onlyIfUserExists(address _address){
         require(users[_address].userAddress != address(0), "Account doesn't exist");
         _;
     }
 
-    modifier userNotExists(address _address){
+    modifier onlyIfUserNotExists(address _address){
         require(users[_address].userAddress == address(0), "Account already exists");
         _;
     }
@@ -82,13 +83,14 @@ contract AccountManagement {
     // ------ Account management ----------
     // ------------------------------------
 
-    function createAccount(address _address, string memory _firstName, string memory _secondName, string memory _mailAdress) public userNotExists(_address){
+    function createAccount(address _address, string memory _firstName, string memory _lastName, string memory _mailAdress) public onlyIfUserNotExists(_address){
         RoleMap memory roleMap = RoleMap(false, false, false, true);
-        User memory user = User(_address, _firstName, _secondName, _mailAdress, false, roleMap);
+        User memory user = User(_address, _firstName, _lastName, _mailAdress, false, roleMap);
         users[_address] = user;     
     }
 
-    function makeAccountActive(address _address) public userExists(_address){
+    function activateAccount(address _address) public onlyIfUserExists(_address){
+        // set an account active. Only active accounts can participate in voting
         if(!activeMembers[_address]){
             User storage user = users[_address];
             user.isActive = true;
@@ -103,7 +105,8 @@ contract AccountManagement {
         }
     }
 
-    function makeAccountPassive(address _address) public userExists(_address){
+    function deactivateAccount(address _address) public onlyIfUserExists(_address){
+        // set an account passive. Usually that would happen after the account has not been active for x days
         if(activeMembers[_address]){
             User storage user = users[_address];
             user.isActive = false;
@@ -115,8 +118,9 @@ contract AccountManagement {
         
     }
 
-    function burnAccount(address _address) public userExists(_address){  
-        makeAccountPassive(_address);       
+    function burnAccount(address _address) public onlyIfUserExists(_address){  
+        // remove an account from the database
+        deactivateAccount(_address);       
         delete users[_address];         
     }
 
@@ -124,7 +128,8 @@ contract AccountManagement {
     // ------ Role management ------------
     // -----------------------------------
 
-    function assignRole(address _address, Role _role) public onlyLeader userExists(_address){
+    function assignRole(address _address, Role _role) public onlyLeader onlyIfUserExists(_address){
+        // assigns a role to a user
         User storage user = users[_address];
         RoleMap storage roleMap = user.roleMap;
 
@@ -142,7 +147,8 @@ contract AccountManagement {
         }
     }
 
-    function removeRole(address _address, Role _role) public onlyLeader userExists(_address){
+    function removeRole(address _address, Role _role) public onlyLeader onlyIfUserExists(_address){
+        // removes a role from a user
         User storage user = users[_address];
         RoleMap storage roleMap = user.roleMap;
 
@@ -162,37 +168,37 @@ contract AccountManagement {
 
     // Setting roles
 
-    function assignLeader(address _address) private onlyLeader userExists(_address){
+    function assignLeader(address _address) private onlyLeader onlyIfUserExists(_address){        
         assignRole(_address, Role.LEADER);
     }
     
-    function assignCouncilMember(address _address) private onlyLeader userExists(_address){
+    function assignCouncilMember(address _address) private onlyLeader onlyIfUserExists(_address){
         assignRole(_address, Role.COUNCILMEMBER);
     }
 
-    function assignMember(address _address) private onlyLeader userExists(_address){
+    function assignMember(address _address) private onlyLeader onlyIfUserExists(_address){
         assignRole(_address, Role.MEMBER);
     }
     
-    function assignGuest(address _address) private onlyLeader userExists(_address){
+    function assignGuest(address _address) private onlyLeader onlyIfUserExists(_address){
         assignRole(_address, Role.GUEST);
     }    
 
     // Removing roles
 
-    function removeLeader(address _address) private onlyLeader userExists(_address){
+    function removeLeader(address _address) private onlyLeader onlyIfUserExists(_address){
         removeRole(_address, Role.LEADER);
     }
     
-    function removeCouncilMember(address _address) private onlyLeader userExists(_address){
+    function removeCouncilMember(address _address) private onlyLeader onlyIfUserExists(_address){
         removeRole(_address, Role.COUNCILMEMBER);
     }
 
-    function removeMember(address _address) private onlyLeader userExists(_address){
+    function removeMember(address _address) private onlyLeader onlyIfUserExists(_address){
         removeRole(_address, Role.MEMBER);
     }
     
-    function removeGuest(address _address) private onlyLeader userExists(_address){
+    function removeGuest(address _address) private onlyLeader onlyIfUserExists(_address){
         removeRole(_address, Role.GUEST);
     }  
 
@@ -222,6 +228,10 @@ contract AccountManagement {
         }
         return false;
     }
+
+    // -----------------------------------
+    // ------- External access -----------
+    // -----------------------------------
     
     function hasLeaderRole(address _address) external view returns (bool) {
         return hasRole(_address, Role.LEADER);
@@ -239,15 +249,7 @@ contract AccountManagement {
         return hasRole(_address, Role.GUEST);
     }
 
-
-
-
-
-    // -----------------------------------
-    // ------ External functions ---------
-    // -----------------------------------
-
-    function getUser(address _address) public view returns(User memory){
+    function getUser(address _address) external view returns(User memory){
         User memory u = users[_address];
         if(u.userAddress != address(0))
         {
@@ -256,44 +258,14 @@ contract AccountManagement {
         revert("User not found!");
     }
 
-    function getActiveMemberCount() public view returns (uint) {
+    function getActiveMemberCount() external view returns (uint) {
         return activeMemberCount;
     }
 
-    function hasRightToCreateReferendum(address _address) external view returns (bool) {
-        User memory user = users[_address];
-        if(user.userAddress != address(0))
-        {
-            if(user.isActive && (user.roleMap.isLeader || user.roleMap.isCouncilMember || user.roleMap.isMember)){
-                return true;
-            }
-        }
-        return  false;
+    function userExists(address _address) external view returns(bool){
+        User memory u = users[_address];
+        return u.userAddress != address(0);
     }
-
-    function hasRightToVote(address _address) external view returns (bool) {
-        User memory user = users[_address];
-        if(user.userAddress != address(0))
-        {
-            if(user.isActive && (user.roleMap.isLeader || user.roleMap.isCouncilMember || user.roleMap.isMember)){
-                return true;
-            }
-        }
-        return  false;
-    }
-
-    function hasRightToSupport(address _address) external view returns (bool) {
-        User memory user = users[_address];
-        if(user.userAddress != address(0))
-        {
-            if(user.isActive && (user.roleMap.isLeader || user.roleMap.isCouncilMember || user.roleMap.isMember)){
-                return true;
-            }
-        }
-        return  false;
-    }
-
-
 
     function testAccountManagement() public{
 
@@ -312,13 +284,24 @@ contract AccountManagement {
         string[10] memory firstNames = ["Rick", "Vanessa", "Alex", "Vici", "Lu", "John", "Sarah", "Samantha", "Peter", "David"];
         string[10] memory lastNames = ["Patel","Kim","Brown","Davis","Martinez","Wilson","Garcia","Jones","Jackson","Smith"];
         string[10] memory mailAdresses = [ "Rick.Patel@por.com","Vanessa.Kim@por.com", "Alex.Brown@por.com","Vici.Davis@por.com","Lu.Martinez@por.com","John.Wilson@por.com","Sarah.Garcia@por.com","Samantha.Jones@por.com","Peter.Jackson@por.com","David.Smith@por.com"];
-         for(uint i = 0; i < testAccounts.length; i++)
+        for(uint i = 0; i < testAccounts.length; i++)
         {
             address acc = testAccounts[i];
-            createAccount(acc, firstNames[i], lastNames[i], mailAdresses[i]);
-            assignRole(acc, Role.MEMBER);
-            removeRole(acc, Role.GUEST);  
-            makeAccountActive(acc);
+            if(!this.userExists(acc))
+            {
+                createAccount(acc, firstNames[i], lastNames[i], mailAdresses[i]);
+                assignRole(acc, Role.MEMBER);
+                removeRole(acc, Role.GUEST);  
+
+                if(i < 2){
+                    assignRole(acc, Role.LEADER);
+                }
+                else if(i < 4){
+                    assignRole(acc, Role.COUNCILMEMBER);
+                }
+
+                activateAccount(acc);
+            }
         }
     }
 

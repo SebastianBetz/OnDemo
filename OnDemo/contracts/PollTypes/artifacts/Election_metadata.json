@@ -6,48 +6,7 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "contract AccountManagement",
-						"name": "_accountManagementAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address[]",
-						"name": "_owners",
-						"type": "address[]"
-					},
-					{
-						"internalType": "string",
-						"name": "_title",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_description",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_confirmTitle",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_confirmDescription",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_rejectTitle",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_rejectDescription",
-						"type": "string"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -83,6 +42,26 @@
 				"type": "event"
 			},
 			{
+				"inputs": [],
+				"name": "acceptCandidature",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_candidate",
+						"type": "address"
+					}
+				],
+				"name": "addCandidate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address[]",
@@ -90,9 +69,22 @@
 						"type": "address[]"
 					}
 				],
-				"name": "approveConsultation",
+				"name": "approveElection",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "canAddCandidate",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -167,6 +159,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "canSupport",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "canVote",
 				"outputs": [
 					{
@@ -180,7 +185,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "cancelConsultationByCouncil",
+				"name": "cancelElectionByCouncil",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -213,15 +218,15 @@
 			},
 			{
 				"inputs": [],
-				"name": "getConfirmCount",
+				"name": "getElectionPoll",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "contract Poll",
 						"name": "",
-						"type": "uint256"
+						"type": "address"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -239,12 +244,112 @@
 			},
 			{
 				"inputs": [],
-				"name": "getRejectCount",
+				"name": "getNominatedCandidates",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Poll.Option[]",
 						"name": "",
-						"type": "uint256"
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getPreselectionPoll",
+				"outputs": [
+					{
+						"internalType": "contract Poll",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getQualifiedCandidates",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Poll.Option[]",
+						"name": "",
+						"type": "tuple[]"
 					}
 				],
 				"stateMutability": "view",
@@ -265,12 +370,112 @@
 			},
 			{
 				"inputs": [],
+				"name": "getRunningCandidates",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Poll.Option[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "getVoterTurnout",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getWinningCandidates",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Poll.Option[]",
+						"name": "",
+						"type": "tuple[]"
 					}
 				],
 				"stateMutability": "view",
@@ -324,6 +529,25 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_candidate",
+						"type": "address"
+					}
+				],
+				"name": "isCandidateAlreadyNominated",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
@@ -342,7 +566,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "removeVote",
+				"name": "removeSupportFromCandidate",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -355,7 +579,20 @@
 						"type": "address[]"
 					}
 				],
-				"name": "startConsultation",
+				"name": "startElection",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_leaders",
+						"type": "address[]"
+					}
+				],
+				"name": "startPreselection",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -374,15 +611,21 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "voteAye",
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_optionId",
+						"type": "uint256"
+					}
+				],
+				"name": "supportCandidate",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "voteNo",
+				"name": "testElection",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -409,34 +652,34 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0xb10d64e6d1c12de6acc6cf01f370b788048a80765218437be0121dce43a08b9e",
+			"keccak256": "0x45f058bce10f81d18dbcd2b7b94548933e602b89e64b813d70d5972e628f90d0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://edec82a2f0a6a5b9d2f374facdf8502153835e65a45111feed0203dfe1fa2b06",
-				"dweb:/ipfs/QmTBR1dDWR3gqBkae1KkwhnNyyYszMrqW11aNN1rMwwnbv"
+				"bzz-raw://a5e5d74d27eeda576347dc2c943a5e891c4bb7164381291d9fc727488254c6d7",
+				"dweb:/ipfs/QmXFvdJf61YhNTo8i2dH7segVtdoN6zaMgUoavTzBzoBgY"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x30141e17fc88804f68a25da049679b48aadd0ed63e87189511e1a0d38839b359",
+			"keccak256": "0x97f0818b10ca85c05dd91545be14ad5bbcb67cd62f04ec0acf06e4ffb03bdda6",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://c750e1af7f552e435ac2f8878ce7c944e414c1dc51974ce4cc697ad94557952c",
-				"dweb:/ipfs/QmcPL48q4mkGvo7PR7wrN7trDMLRmQA2cNH19afbVk3CPJ"
+				"bzz-raw://9601f35f7b4bb295de29bad24054d9608e687011d6534b46e63f043769c4e6c1",
+				"dweb:/ipfs/QmPuzV3Eba9e8s8cJ9ExJWEDRd6dkwgYzVdBTW9YoBCNUG"
 			]
 		},
 		"OnDemo/contracts/PollTypes/Election.sol": {
-			"keccak256": "0xdba53b17fad742a8db8a7d975ebd4da0b1e8ec2881c24d1b0dd2bd15590f6af5",
+			"keccak256": "0x71b1c8fad9d17bb65dc5ce82bf80b05f1930d841b82a656290752dfe0f01e3d6",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://4cd57fc34fb98e5e6969ab9e79889c53de36ad4287bc8b73df3d319668c8706f",
-				"dweb:/ipfs/QmRRF4joi884FytEMDUPUnL2PbH9dtGAScUTR2cUV98mvH"
+				"bzz-raw://57f7efa46a82e37900e7771933de2f9bf99bdac528750c5117a9d9ae07dcdba5",
+				"dweb:/ipfs/QmaaeobuZahsKhQdqcKi9qTkqi5P4zR7RJa124UU64XEm4"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {
