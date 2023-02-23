@@ -119,6 +119,79 @@
 						"type": "address"
 					}
 				],
+				"name": "getUser",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "userAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "firstName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "secondName",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "mailAdress",
+								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bool",
+										"name": "isLeader",
+										"type": "bool"
+									},
+									{
+										"internalType": "bool",
+										"name": "isCouncilMember",
+										"type": "bool"
+									},
+									{
+										"internalType": "bool",
+										"name": "isMember",
+										"type": "bool"
+									},
+									{
+										"internalType": "bool",
+										"name": "isGuest",
+										"type": "bool"
+									}
+								],
+								"internalType": "struct AccountManagement.RoleMap",
+								"name": "roleMap",
+								"type": "tuple"
+							}
+						],
+						"internalType": "struct AccountManagement.User",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
 				"name": "hasCouncilMemberRole",
 				"outputs": [
 					{
@@ -337,11 +410,11 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x185025fc8431c4230814b6a86877ca828e0234a7c3b29a85750f06ca1b8e35b8",
+			"keccak256": "0xb10d64e6d1c12de6acc6cf01f370b788048a80765218437be0121dce43a08b9e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://fa53dc27088b1a84a906ad6843814c911b5b3a9d1988f7b8a696387375ae6e5b",
-				"dweb:/ipfs/QmVHe4K1CF1k5F3aUrVAT279CkDGcPG5KJr6gwHYWjEFa2"
+				"bzz-raw://edec82a2f0a6a5b9d2f374facdf8502153835e65a45111feed0203dfe1fa2b06",
+				"dweb:/ipfs/QmTBR1dDWR3gqBkae1KkwhnNyyYszMrqW11aNN1rMwwnbv"
 			]
 		}
 	},

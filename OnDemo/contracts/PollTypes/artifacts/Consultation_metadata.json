@@ -52,26 +52,109 @@
 				"type": "constructor"
 			},
 			{
+				"anonymous": false,
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_title",
-						"type": "string"
+						"indexed": true,
+						"internalType": "address",
+						"name": "_by",
+						"type": "address"
 					},
 					{
+						"indexed": false,
+						"internalType": "enum Consultation.State",
+						"name": "oldState",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum Consultation.State",
+						"name": "newState",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
 						"internalType": "string",
-						"name": "_description",
+						"name": "description",
 						"type": "string"
 					}
 				],
-				"name": "addAnswer",
+				"name": "StateChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_guaranteers",
+						"type": "address[]"
+					}
+				],
+				"name": "approveConsultation",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_guaranteers",
+						"type": "address[]"
+					}
+				],
+				"name": "canApprove",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
+				"name": "canCancel",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_creators",
+						"type": "address[]"
+					}
+				],
 				"name": "canCreate",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_creators",
+						"type": "address[]"
+					}
+				],
+				"name": "canStart",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -97,6 +180,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "cancelConsultationByCouncil",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "cancelationReason",
 				"outputs": [
 					{
@@ -110,7 +200,72 @@
 			},
 			{
 				"inputs": [],
-				"name": "deadline",
+				"name": "daysOpen",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getConfirmCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getMinimalVoterTurnout",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getRejectCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getResult",
+				"outputs": [
+					{
+						"internalType": "enum Consultation.Result",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getVoterTurnout",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -125,13 +280,45 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_answerId",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "disableAnswer",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "guaranteers",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hasDeadlinePassed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hasMinimumVoterTurnout",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -155,7 +342,20 @@
 			},
 			{
 				"inputs": [],
-				"name": "removeVoteForAnswer",
+				"name": "removeVote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_leaders",
+						"type": "address[]"
+					}
+				],
+				"name": "startConsultation",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -174,14 +374,15 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_answerId",
-						"type": "uint256"
-					}
-				],
-				"name": "voteForAnswer",
+				"inputs": [],
+				"name": "voteAye",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "voteNo",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -200,7 +401,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"OnDemo/contracts/PollTypes/Consultation_new.sol": "Consultation"
+			"OnDemo/contracts/PollTypes/Consultation.sol": "Consultation"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -215,27 +416,27 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x185025fc8431c4230814b6a86877ca828e0234a7c3b29a85750f06ca1b8e35b8",
+			"keccak256": "0xb10d64e6d1c12de6acc6cf01f370b788048a80765218437be0121dce43a08b9e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://fa53dc27088b1a84a906ad6843814c911b5b3a9d1988f7b8a696387375ae6e5b",
-				"dweb:/ipfs/QmVHe4K1CF1k5F3aUrVAT279CkDGcPG5KJr6gwHYWjEFa2"
+				"bzz-raw://edec82a2f0a6a5b9d2f374facdf8502153835e65a45111feed0203dfe1fa2b06",
+				"dweb:/ipfs/QmTBR1dDWR3gqBkae1KkwhnNyyYszMrqW11aNN1rMwwnbv"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x62595f6d2d9556d8f501a363c8d89ac665edaf5717dd7e6180d40ebbfa8425d8",
+			"keccak256": "0x30141e17fc88804f68a25da049679b48aadd0ed63e87189511e1a0d38839b359",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://f34fcd39b8ddbf6cdac1e66f176ff38fbe162c68c5da856627f576ba8b42af69",
-				"dweb:/ipfs/QmcbHrKhRtF5MxEUTfATBn9is6xBPS1piASLAEiHy4ozZb"
+				"bzz-raw://c750e1af7f552e435ac2f8878ce7c944e414c1dc51974ce4cc697ad94557952c",
+				"dweb:/ipfs/QmcPL48q4mkGvo7PR7wrN7trDMLRmQA2cNH19afbVk3CPJ"
 			]
 		},
-		"OnDemo/contracts/PollTypes/Consultation_new.sol": {
-			"keccak256": "0x10765f8598564232e77cb1918aeec17d27022d4b97bafbc6ca0168799fa30b1c",
+		"OnDemo/contracts/PollTypes/Consultation.sol": {
+			"keccak256": "0xe93570ce6c1b34c35721170fc90e95d74e8d1889dd1ff3010dbb06822684699a",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://3cf1a3249352e45f8cb12ec54e2783dc2a77bd0311db96ea70dd39a4af8efc6a",
-				"dweb:/ipfs/QmP1PZT6HQ47MvAmkrXwkaVgv1PVbzYJkiQkc7ZPPAzwnT"
+				"bzz-raw://9c1a8a1d6176a659543ff164b52484f296d186da6cf66d90f4b80a93fca524e9",
+				"dweb:/ipfs/QmaNWwZASYXASRgyjsQkupGREAXQLEzcwqAMqfRpbL4iS2"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

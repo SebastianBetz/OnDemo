@@ -63,7 +63,7 @@ contract AccountManagement {
     }
 
     modifier onlyLeader() {
-        require(msg.sender == owner || hasLeaderRole(msg.sender), "Only owner can call this function.");
+        require(msg.sender == owner || this.hasLeaderRole(msg.sender), "Only owner can call this function.");
         _;
     }
 
@@ -223,19 +223,19 @@ contract AccountManagement {
         return false;
     }
     
-    function hasLeaderRole(address _address) public view returns (bool) {
+    function hasLeaderRole(address _address) external view returns (bool) {
         return hasRole(_address, Role.LEADER);
     }
 
-    function hasCouncilMemberRole(address _address) public view returns (bool) {
+    function hasCouncilMemberRole(address _address) external view returns (bool) {
         return hasRole(_address, Role.COUNCILMEMBER);
     }
     
-    function hasMemberRole(address _address) public view returns (bool) {
+    function hasMemberRole(address _address) external view returns (bool) {
         return hasRole(_address, Role.MEMBER);
     }
     
-    function hasGuestRole(address _address) public view returns (bool) {
+    function hasGuestRole(address _address) external view returns (bool) {
         return hasRole(_address, Role.GUEST);
     }
 
@@ -246,6 +246,15 @@ contract AccountManagement {
     // -----------------------------------
     // ------ External functions ---------
     // -----------------------------------
+
+    function getUser(address _address) public view returns(User memory){
+        User memory u = users[_address];
+        if(u.userAddress != address(0))
+        {
+            return u;
+        }
+        revert("User not found!");
+    }
 
     function getActiveMemberCount() public view returns (uint) {
         return activeMemberCount;

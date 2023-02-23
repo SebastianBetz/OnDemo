@@ -32,6 +32,37 @@
 				"type": "constructor"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_by",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum Poll.State",
+						"name": "oldState",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum Poll.State",
+						"name": "newState",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "StateChanged",
+				"type": "event"
+			},
+			{
 				"inputs": [],
 				"name": "activatePoll",
 				"outputs": [],
@@ -137,7 +168,60 @@
 			},
 			{
 				"inputs": [],
+				"name": "getAnswers",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Poll.Answer[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "getCreationDate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getVoterCount",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -214,46 +298,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "viewAnswers",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "id",
-								"type": "uint256"
-							},
-							{
-								"internalType": "address",
-								"name": "owner",
-								"type": "address"
-							},
-							{
-								"internalType": "string",
-								"name": "title",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "description",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "voterCount",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct Poll.Answer[]",
-						"name": "",
-						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -308,19 +352,19 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x185025fc8431c4230814b6a86877ca828e0234a7c3b29a85750f06ca1b8e35b8",
+			"keccak256": "0xb10d64e6d1c12de6acc6cf01f370b788048a80765218437be0121dce43a08b9e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://fa53dc27088b1a84a906ad6843814c911b5b3a9d1988f7b8a696387375ae6e5b",
-				"dweb:/ipfs/QmVHe4K1CF1k5F3aUrVAT279CkDGcPG5KJr6gwHYWjEFa2"
+				"bzz-raw://edec82a2f0a6a5b9d2f374facdf8502153835e65a45111feed0203dfe1fa2b06",
+				"dweb:/ipfs/QmTBR1dDWR3gqBkae1KkwhnNyyYszMrqW11aNN1rMwwnbv"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x62595f6d2d9556d8f501a363c8d89ac665edaf5717dd7e6180d40ebbfa8425d8",
+			"keccak256": "0x30141e17fc88804f68a25da049679b48aadd0ed63e87189511e1a0d38839b359",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://f34fcd39b8ddbf6cdac1e66f176ff38fbe162c68c5da856627f576ba8b42af69",
-				"dweb:/ipfs/QmcbHrKhRtF5MxEUTfATBn9is6xBPS1piASLAEiHy4ozZb"
+				"bzz-raw://c750e1af7f552e435ac2f8878ce7c944e414c1dc51974ce4cc697ad94557952c",
+				"dweb:/ipfs/QmcPL48q4mkGvo7PR7wrN7trDMLRmQA2cNH19afbVk3CPJ"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

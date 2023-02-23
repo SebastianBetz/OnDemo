@@ -1,0 +1,452 @@
+{
+	"compiler": {
+		"version": "0.8.12+commit.f00d7308"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract AccountManagement",
+						"name": "_accountManagementAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "_owners",
+						"type": "address[]"
+					},
+					{
+						"internalType": "string",
+						"name": "_title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_description",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_confirmTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_confirmDescription",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rejectTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rejectDescription",
+						"type": "string"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_by",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum Election.State",
+						"name": "oldState",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum Election.State",
+						"name": "newState",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "StateChanged",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_guaranteers",
+						"type": "address[]"
+					}
+				],
+				"name": "approveConsultation",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_guaranteers",
+						"type": "address[]"
+					}
+				],
+				"name": "canApprove",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "canCancel",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_creators",
+						"type": "address[]"
+					}
+				],
+				"name": "canCreate",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_creators",
+						"type": "address[]"
+					}
+				],
+				"name": "canStart",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "canVote",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "cancelConsultationByCouncil",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "cancelationReason",
+				"outputs": [
+					{
+						"internalType": "enum Election.CancelationReason",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "daysOpen",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getConfirmCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getMinimalVoterTurnout",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getRejectCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getResult",
+				"outputs": [
+					{
+						"internalType": "enum Election.Result",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getVoterTurnout",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "guaranteers",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hasDeadlinePassed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hasMinimumVoterTurnout",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "owners",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "removeVote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_leaders",
+						"type": "address[]"
+					}
+				],
+				"name": "startConsultation",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "state",
+				"outputs": [
+					{
+						"internalType": "enum Election.State",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "voteAye",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "voteNo",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"OnDemo/contracts/PollTypes/Election.sol": "Election"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"OnDemo/contracts/AccountManagement.sol": {
+			"keccak256": "0xb10d64e6d1c12de6acc6cf01f370b788048a80765218437be0121dce43a08b9e",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://edec82a2f0a6a5b9d2f374facdf8502153835e65a45111feed0203dfe1fa2b06",
+				"dweb:/ipfs/QmTBR1dDWR3gqBkae1KkwhnNyyYszMrqW11aNN1rMwwnbv"
+			]
+		},
+		"OnDemo/contracts/Poll.sol": {
+			"keccak256": "0x30141e17fc88804f68a25da049679b48aadd0ed63e87189511e1a0d38839b359",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://c750e1af7f552e435ac2f8878ce7c944e414c1dc51974ce4cc697ad94557952c",
+				"dweb:/ipfs/QmcPL48q4mkGvo7PR7wrN7trDMLRmQA2cNH19afbVk3CPJ"
+			]
+		},
+		"OnDemo/contracts/PollTypes/Election.sol": {
+			"keccak256": "0xdba53b17fad742a8db8a7d975ebd4da0b1e8ec2881c24d1b0dd2bd15590f6af5",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://4cd57fc34fb98e5e6969ab9e79889c53de36ad4287bc8b73df3d319668c8706f",
+				"dweb:/ipfs/QmRRF4joi884FytEMDUPUnL2PbH9dtGAScUTR2cUV98mvH"
+			]
+		},
+		"OnDemo/contracts/Utils.sol": {
+			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a3dba6bcd21589f42c8cee255fc587ad4f5e442ee53a89a987d67e70784d4974",
+				"dweb:/ipfs/QmQLwgfrxyEPyQQQcU3F7mBXzWu3CzSJRMFnMBFXYfx751"
+			]
+		}
+	},
+	"version": 1
+}

@@ -13,6 +13,13 @@ contract Poll {
         DEACTIVATED
     }
 
+    event StateChanged(
+        address indexed _by,
+        State oldState,
+        State newState,
+        string description
+    );
+
     struct Answer {
         uint id;
         address owner;
@@ -54,9 +61,9 @@ contract Poll {
         id = utils.generateGUID();
         title = _title;
         description = _description;
-        creationDate = block.timestamp;
-        state = State.ACTIVE;
+        creationDate = block.timestamp;        
         owners = _owners;
+        setState(State.ACTIVE, "Poll created");
         return id;
     }
 
@@ -77,20 +84,21 @@ contract Poll {
         _;
     }
 
-    function setState(State _state) private {
+    function setState(State _state, string memory _description) private {
+        emit StateChanged(msg.sender, state, _state, _description);
         state = _state;
     }
 
     function activatePoll() onlyOwners public {
-        setState(State.ACTIVE);
+        setState(State.ACTIVE, "Poll activated");
     }
 
     function freezePoll() onlyOwners public {
-        setState(State.FROZEN);
+        setState(State.FROZEN, "Poll frozen");
     }
 
     function disablePoll() onlyOwners public {
-        setState(State.DEACTIVATED);
+        setState(State.DEACTIVATED, "Poll disabled");
     }
 
 
@@ -146,9 +154,7 @@ contract Poll {
         revert('Not found');
     }
 
-    function viewAnswers() public view returns (Answer[] memory) {
-        return answers;
-    }
+    
 
     function disableAnswer(uint _answerId) onlyAnswerOwner(_answerId) isActive onlyOwners public {
         Answer storage a = getAnswer(_answerId);
@@ -221,5 +227,13 @@ contract Poll {
 
     function getCreationDate() external view returns (uint) {
         return creationDate;
+    }
+
+    function getVoterCount() external view returns (uint) {
+        return voterCount;
+    }
+
+    function getAnswers() external view returns (Answer[] memory) {
+        return answers;
     }
 }
