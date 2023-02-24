@@ -8,7 +8,12 @@ contract AccountManagement {
     // Allows users to take roles
     // Allows
 
-    enum Role { LEADER, COUNCILMEMBER, MEMBER, GUEST }
+    enum Role { 
+        LEADER, 
+        COUNCILMEMBER, 
+        MEMBER, 
+        GUEST 
+    }
 
     struct User {
         address userAddress;
@@ -50,6 +55,8 @@ contract AccountManagement {
         owner = msg.sender;
         createAccount(msg.sender, _firstName, _lastName, _mailAdress);      
         assignRole(msg.sender, Role.LEADER);
+        assignRole(msg.sender, Role.COUNCILMEMBER);
+        assignRole(msg.sender, Role.MEMBER);
         removeRole(msg.sender, Role.GUEST);  
         activateAccount(msg.sender);
     }

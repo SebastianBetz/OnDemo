@@ -11,9 +11,24 @@ contract Consultation {
     // A consultation can have only two answers, has a deadline and needs to be started by a council member
     // A consultation extends the polling interface to include role based rights inherited from the accountmanagement contract
 
-    enum CancelationReason { DRAW, NOTENOUGHVOTERTURNOUT, CANCELEDBYCOUNCIL }
-    enum State { CREATED, APPROVED, RUNNING, CONFIRMED, REJECTED, CANCELED }
-    enum Result{ AYES, NOES, DRAW }
+    enum CancelReason { 
+        DRAW,                   // Consultation has seen equal amount of Ayes and Noes
+        NOTENOUGHVOTERTURNOUT,  // Not enough voters participated
+        CANCELEDBYCOUNCIL       // Council canceled consultation
+        }
+    enum State { 
+        CREATED,
+        APPROVED,    // Council approved consultation
+        RUNNING,     // Members can vote
+        CONFIRMED,   // Consultation has been confirmed
+        REJECTED,    // Consultation has been rejected
+        CANCELED     // Council canceled consultation
+    }
+    enum Result{ 
+        AYES,   // More members voted with Aye
+        NOES,   // More members voted with No
+        DRAW    // Same amount of members voted with Aye and No respectively
+    }
 
     event StateChanged(
         address indexed _by,
@@ -28,7 +43,7 @@ contract Consultation {
     uint minimalVoterTurnoutPercent = 50;
     
     State public state;
-    CancelationReason public cancelationReason;   
+    CancelReason public cancelationReason;   
 
     AccountManagement private accMng;
     Poll private poll;
@@ -48,6 +63,11 @@ contract Consultation {
             }
         }
         require(active, "The poll must be in an active state!");
+        _;
+    }
+
+    modifier onlyCouncelors (){
+        require(accMng.hasCouncilMemberRole(msg.sender), "The poll must be in an active state.");
         _;
     }
 
@@ -75,32 +95,20 @@ contract Consultation {
         }       
     }
 
-    function approve(address[] memory _guaranteers) public {
+    function approve() onlyCouncelors public {
         if(state == State.CREATED)
         {
-            if(canApprove(_guaranteers))
-            {
-                setState(State.APPROVED, "Council has approved the referendum!");
-            }
-            else{
-                revert("Only Members of the council can approve consultations.");
-            }
+            setState(State.APPROVED, "Council has approved the referendum!");
         }
         else{
             revert("Consultation is not in the 'Created' state and can therefore not be approved.");
         }
     }
 
-    function start(address[] memory _leaders) public {
+    function start() onlyCouncelors public {
         if(state == State.APPROVED)
         {
-             if(canStart(_leaders))
-            {
-                setState(State.RUNNING, "Council has approved the referendum!");
-            }
-            else{
-                revert("Only Members of the council can approve consultations.");
-            }
+            setState(State.RUNNING, "Council has approved the referendum!");
         }
         else{
             revert("Consultation is not in the 'Approved' state and can therefore not be started.");
@@ -108,7 +116,7 @@ contract Consultation {
        
     }
 
-    function finish() private {
+    function finish() onlyCouncelors private {
         if(state == State.RUNNING)
         {
             if(hasMinimumVoterTurnout())
@@ -123,11 +131,11 @@ contract Consultation {
                     setState(State.REJECTED, "Noes have it!");
                 }
                 else{
-                    cancel(CancelationReason.DRAW, "It's a draw!");
+                    cancel(CancelReason.DRAW, "It's a draw!");
                 }
             }
             else{
-                cancel(CancelationReason.NOTENOUGHVOTERTURNOUT, "Consultation canceled: Voter turnout has been too small!");
+                cancel(CancelReason.NOTENOUGHVOTERTURNOUT, "Consultation canceled: Voter turnout has been too small!");
             }     
         }
         else{
@@ -135,17 +143,7 @@ contract Consultation {
         }           
     }
 
-    function cancelByCouncil() public {
-        if(canCancel())
-        {
-            cancel(CancelationReason.CANCELEDBYCOUNCIL, "Consultation canceled by Council!");
-        }
-        else{
-            revert("Only Members of the council can cancel consultations.");
-        }
-    }
-
-    function cancel(CancelationReason _reason, string memory _description) private {
+    function cancel(CancelReason _reason, string memory _description) onlyCouncelors private {
         setState(State.CANCELED, _description);
         cancelationReason = _reason;
     }

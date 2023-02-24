@@ -8,7 +8,12 @@ contract Poll {
     // A simple polling contract which can function as an interface for more complex polling like consultations, referendums and elections
     // voting can be exclusive and not exclusive
 
-    enum State { CREATED, ACTIVE, FROZEN, DEACTIVATED }
+    enum State { 
+        CREATED, 
+        ACTIVE,     // Votes can be casted
+        FROZEN,     // Edits are not possible
+        DEACTIVATED // Edits are not possible
+    }
 
     event StateChanged(
         address indexed _by,
@@ -114,29 +119,18 @@ contract Poll {
     // ------- Manage Options ------------
     // -----------------------------------
 
-    modifier onlyOptionOwner(uint _optionId) {
-        bool isOwner = false;
-        Option memory a = getOption(_optionId);
-        if(a.owner == msg.sender){
-            isOwner = true;
-        }
-
-        require(isOwner == true, "Only owner can call this function.");
-        _;
-    }
-
     function addOption(address _owner, bool _enabled, string memory _title, string memory _description) isActive onlyOwners public {
         // options are connected to polls
         // option ids start with 1000 to be able to distniguish in the mapping who has voted for an option and who hasn't (meaning returning a value of 0)
 
-        address user = msg.sender;               
+        address creator = msg.sender;               
         uint optionId = options.length + 1000;
-        Option memory a = Option(optionId, _owner, user, _enabled, _title, _description, 0);       
+        Option memory a = Option(optionId, _owner, creator, _enabled, _title, _description, 0);       
         options.push(a);            
     }
 
     function getOption(uint _optionId) private view returns (Option storage) {
-        for(uint i; i < options.length; i++)        {
+        for(uint i; i < options.length; i++) {
             if(options[i].id == _optionId){
                 return options[i];
             }
@@ -145,7 +139,7 @@ contract Poll {
     }
 
     function enableOption(uint _optionId) public {
-        for(uint i; i < options.length; i++)        {
+        for(uint i; i < options.length; i++) {
             if(options[i].id == _optionId){
                 options[i].isActive = true;
                 return;
@@ -155,7 +149,7 @@ contract Poll {
     }
 
     function disableOption(uint _optionId) public {
-        for(uint i; i < options.length; i++)        {
+        for(uint i; i < options.length; i++) {
             if(options[i].id == _optionId){
                 options[i].isActive = false;
                 return;
@@ -180,8 +174,11 @@ contract Poll {
             uint[] storage votedOptionIds = votersToOptionMapping[_userAddress];
             if(votedOptionIds.length == 0)
             {
-                // set new vote
-                votedOptionIds[0] = _optionId;
+                // set new vote      
+
+                uint[] memory newVotedOptionIds = new uint[](1);
+                newVotedOptionIds[0] = _optionId;
+                votersToOptionMapping[_userAddress] = newVotedOptionIds;
                 voterCount++;
             }
             else if(exclusiveVote)
@@ -219,7 +216,6 @@ contract Poll {
             revert("Please provide which vote should be removed");
         }
         else{
-            voterCount = 10;
             uint[] memory votedOptionIds = votersToOptionMapping[msg.sender];
             removeVoteForOption(votedOptionIds[0]);
         }
@@ -237,8 +233,7 @@ contract Poll {
         }
         else{
             if(exclusiveVote){
-                votedOptionIds = new uint[](0);   
-                voterCount--;             
+                votedOptionIds = new uint[](0);             
             }   
             else{
                 bool found = false;
@@ -257,15 +252,17 @@ contract Poll {
                 if(found)
                 {
                     delete votedOptionIds[votedOptionIds.length - 1];
-                }     
-                if(votedOptionIds.length == 0)
-                {
-                    voterCount--;  
-                }    
+                }   
             }  
 
             Option storage oldOption = getOption(_optionId);
             oldOption.voterCount--;
+
+            if(votedOptionIds.length == 0)
+            {
+                // if no voted options are left reduce voterCount for poll
+                voterCount--;  
+            } 
 
             votersToOptionMapping[msg.sender] = votedOptionIds;
             success = true;

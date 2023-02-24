@@ -9,7 +9,7 @@
 				"inputs": [
 					{
 						"internalType": "contract AccountManagement",
-						"name": "_accountManagementAddress",
+						"name": "_accMngAddress",
 						"type": "address"
 					},
 					{
@@ -32,6 +32,37 @@
 				"type": "constructor"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_by",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum Referendum.State",
+						"name": "oldState",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum Referendum.State",
+						"name": "newState",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "StateChanged",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "string",
@@ -51,19 +82,33 @@
 			},
 			{
 				"inputs": [],
-				"name": "addSupport",
+				"name": "advanceToStage1",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "announcementThresholdInDays",
+				"name": "advanceToStage2",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "approve",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "canCancel",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "bool",
 						"name": "",
-						"type": "uint256"
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -113,7 +158,7 @@
 				"name": "cancelationReason",
 				"outputs": [
 					{
-						"internalType": "enum Referendum.CancelationReason",
+						"internalType": "enum Referendum.CancelReason",
 						"name": "",
 						"type": "uint8"
 					}
@@ -123,7 +168,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "checkAnnouncementDeadlineReached",
+				"name": "checkStage1DeadlineReached",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -136,7 +181,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "checkAnnouncementThresholdReached",
+				"name": "checkStage1ThresholdReached",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -149,7 +194,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "checkPublicationDeadlineReached",
+				"name": "checkStage2DeadlineReached",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -162,7 +207,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "checkPublicationThresholdReached",
+				"name": "checkStage2ThresholdReached",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -187,6 +232,32 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getVoterTurnout",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getWinningOption",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -207,7 +278,28 @@
 			},
 			{
 				"inputs": [],
-				"name": "publicationThresholdInDays",
+				"name": "publish",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "removeSupport",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "removeVote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "stage1SupportThreshold",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -220,16 +312,41 @@
 			},
 			{
 				"inputs": [],
-				"name": "removeSupport",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "stage1Threshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "removeVoteForOption",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "stage2SupportThreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "stage2Threshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -247,28 +364,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "supportShareNeededToAnnounce",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "supportShareNeededToPublish",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "support",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -292,7 +390,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "voteForOption",
+				"name": "vote",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -319,34 +417,34 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x45f058bce10f81d18dbcd2b7b94548933e602b89e64b813d70d5972e628f90d0",
+			"keccak256": "0x7658ea6081f84f2e194aabb04fe7cce60fda0ba6637e86929cab6e563105a935",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://a5e5d74d27eeda576347dc2c943a5e891c4bb7164381291d9fc727488254c6d7",
-				"dweb:/ipfs/QmXFvdJf61YhNTo8i2dH7segVtdoN6zaMgUoavTzBzoBgY"
+				"bzz-raw://4e7ab1c90d73084330639281b8fde05cdf536cb0579b7bfdcc3953534296c473",
+				"dweb:/ipfs/QmTxK87SredP1yVfVcYfQiCoS1xR2L7Ag3gyAdfCrkF2jx"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0xfd891ec0b2249e4bcd9df86ebeeb005a504931baa68411de417f33ac4ad5edfa",
+			"keccak256": "0x129ee2f56ed9206ac98778e007aa1a41248c4ec209086a9d61666f124f62812e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://673770fc5bba3f50f5d0d6dacba141236f4e76bb8d11064a2c9b01489c1aa8d5",
-				"dweb:/ipfs/QmbLZow1fhFvCurbNd12fiAzYq3vBUz5ruoL8vYCZYoB4r"
+				"bzz-raw://0bf12cee7a160378b436f6049bf49b961f9c5ba95bc69f6d56498ee6c0e58d6e",
+				"dweb:/ipfs/QmYm7DKNeXBfJnwVDquFi4qdvBxcbvuLTqPkm8fg6J5JCd"
 			]
 		},
 		"OnDemo/contracts/PollTypes/Referendum.sol": {
-			"keccak256": "0x6fcbb4cd18caed6fb242a899663ea5ea987bafe5dd846ce568dbd6ea98ae439d",
+			"keccak256": "0xb66e9e8f96a94742f24a0385ac4477d57ab26b20cc57ce65b86391317b7f7e02",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://c8847cc786131a921ae21d19e2bb8fffa87d9ba971768f4472aaad1b8cfdfd9a",
-				"dweb:/ipfs/QmRqU8Ygb49HpHscB2cjznVNXZgXW4D6cC6TQAszR3uszs"
+				"bzz-raw://43bd5ee4725c481c770116e163085ed3a66bfb3e4a9836b58df698731562cbe2",
+				"dweb:/ipfs/QmYwXtnCQ3utyrvHvgKq6XTYJEyHoFBo3JrfeiH9jAPndb"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

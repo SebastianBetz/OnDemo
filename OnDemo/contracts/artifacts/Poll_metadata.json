@@ -21,6 +21,11 @@
 						"internalType": "string",
 						"name": "_description",
 						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "_exclusiveVote",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -136,6 +141,19 @@
 				"name": "enableOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "exclusiveVote",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -454,6 +472,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_optionId",
+						"type": "uint256"
+					}
+				],
+				"name": "removeVoteForOption",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "removeVoteForOption",
 				"outputs": [],
@@ -541,11 +572,11 @@
 	},
 	"sources": {
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x97f0818b10ca85c05dd91545be14ad5bbcb67cd62f04ec0acf06e4ffb03bdda6",
+			"keccak256": "0x7d230dd50e4559cacd5b63d9d506e4e06609374fb4927dfebc01cf0cfa55db81",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://9601f35f7b4bb295de29bad24054d9608e687011d6534b46e63f043769c4e6c1",
-				"dweb:/ipfs/QmPuzV3Eba9e8s8cJ9ExJWEDRd6dkwgYzVdBTW9YoBCNUG"
+				"bzz-raw://b1dbd7af974700125e772e46c29f519b6b5b7f8c3ccf05172ea2348775f7c605",
+				"dweb:/ipfs/QmerSJnFMwryQ9Xrfe5Ze8zMVxz7WCFAowyCkdDajYyTxN"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

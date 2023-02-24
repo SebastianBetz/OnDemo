@@ -352,18 +352,18 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0xdf8e0587f8c87d7398ac231d94b17f7608fef85c27b85ac53a0210cdfa75c78d",
+			"keccak256": "0x7658ea6081f84f2e194aabb04fe7cce60fda0ba6637e86929cab6e563105a935",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://96a75d65884b21ad06dccf68671b82bb3b8c0cbaee78c5337bb79d903043fe40",
-				"dweb:/ipfs/QmZWKgjGUG3ythVnWQn6yXBj2NYWLnQd5RtXvd3zXd4xwi"
+				"bzz-raw://4e7ab1c90d73084330639281b8fde05cdf536cb0579b7bfdcc3953534296c473",
+				"dweb:/ipfs/QmTxK87SredP1yVfVcYfQiCoS1xR2L7Ag3gyAdfCrkF2jx"
 			]
 		}
 	},

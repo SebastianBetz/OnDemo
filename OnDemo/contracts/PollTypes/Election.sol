@@ -7,10 +7,29 @@ import "../Poll.sol";
 import "../Utils.sol";
 
 contract Election {
+    // An Election contract that uses the polling interface
+    // An Election has two phases
+    // 1.Phase: members can nominate other members. The nominees have to accept their nomination in order to participate in the election. Members can express their support for one or more nominees.
+    // 2.Phase: nominees that have passed the minVotesBoundary are advancing to the actual election. In this election every member has only one vote
+    // An Election extends the polling interface to include role based rights inherited from the accountmanagement contract.
     
-    enum CancelationReason { DRAW, NOTENOUGHVOTERTURNOUT, CANCELEDBYCOUNCIL }
-    enum State { CREATED, APPROVED, PRESELECTION, ELECTION, CLOSED, CANCELED }
-    enum Result { AYES, NOES, DRAW }
+    enum CancelReason { 
+        DRAW, 
+        NOTENOUGHVOTERTURNOUT, 
+        CANCELEDBYCOUNCIL 
+    }
+    enum State { 
+        CREATED, 
+        PRESELECTION, 
+        ELECTION, 
+        CLOSED, 
+        CANCELED 
+    }
+    enum Result { 
+        AYES, 
+        NOES, 
+        DRAW 
+    }
 
     event StateChanged(
         address indexed _by,
@@ -28,7 +47,7 @@ contract Election {
     AccountManagement.Role role;
 
     State public state;
-    CancelationReason public cancelationReason;
+    CancelReason public cancelationReason;
 
     AccountManagement private accMng;
     Poll private preSelectionPoll;
@@ -48,7 +67,7 @@ contract Election {
         address[] memory council = new address[](1);
         council[0] = leader;
 
-        accMng = AccountManagement(0x9279F54dAc3570d115AdB6083f85D05a4e6F41Ad);
+        accMng = AccountManagement(0x9a2E12340354d2532b4247da3704D2A5d73Bd189);
         string memory _title = "TestElection";
         string memory _description = "TestElectionDEscription";
         AccountManagement.Role _role = AccountManagement.Role.LEADER;
@@ -56,17 +75,17 @@ contract Election {
 
         createPreselection( council, _title, _description, _role, _maxCandidates );
 
-        approveElection(council);
-        startPreselection(council);
+        startPreselection();
+        setState(State.CREATED, "Consultation created!");
         addCandidate(leader);
         acceptCandidature();
     }
 
-    modifier isActive() {
+    modifier onlyIfIsActive () {
         // checks if the election is in an active state
 
         bool active = false;
-        if ( state == State.CREATED || state == State.APPROVED || state == State.PRESELECTION || state == State.ELECTION ) {
+        if (state == State.CREATED) {
             if (!hasDeadlinePassed()) {
                 active = true;
             }
@@ -75,41 +94,53 @@ contract Election {
         _;
     }
 
-    function getPreselectionPoll() public returns (Poll) {
+    modifier onlyDuringPreselection () {
         // checks if the election is in an active state
-        return preSelectionPoll;
+
+        bool active = false;
+        if (state == State.PRESELECTION) {
+            if (!hasDeadlinePassed()) {
+                active = true;
+            }
+        }
+        require(active, "The poll must be preselection state!");
+        _;
     }
 
-    function getElectionPoll() public returns (Poll) {
-        return electionPoll;
+    modifier onlyCouncelors (){
+        require(accMng.hasCouncilMemberRole(msg.sender), "Only councelors can use this function");
+        _;
     }
+
+    // -----------------------------------
+    // ---------- Manage State -----------
+    // -----------------------------------
 
     function setState(State _state, string memory _description) private {
         emit StateChanged(msg.sender, state, _state, _description);
         state = _state;
     }
 
-    // -----------------------------------
-    // ------- Manage Life Cycle ---------
-    // -----------------------------------
-
-    function createPreselection( address[] memory _owners, string memory _title, string memory _description, AccountManagement.Role _role, uint256 _maxCandidates ) private {
+    function createPreselection( address[] memory _owners, string memory _title, string memory _description, AccountManagement.Role _role, uint256 _maxCandidates ) onlyCouncelors private {
+        // Creates a poll in which canidadates can be added
+        
         if (canCreate(_owners)) {
             utils = new Utils();
-            preSelectionPoll = new Poll(_owners, _title, _description);
+            preSelectionPoll = new Poll(_owners, _title, _description, false);
             owners = _owners;
             role = _role;
-            maxCandidates = _maxCandidates;
-            setState(State.CREATED, "Consultation created!");
+            maxCandidates = _maxCandidates;            
         } else {
             revert("One or more users can't create a consultation!");
         }
     }
 
-    function createElection() private {
+    function createElection() onlyCouncelors private {
+        // Creates a poll in which all qualified candidates from the preselection poll are added
+
         string memory electionTitle = preSelectionPoll.getTitle();
         string memory description = preSelectionPoll.getDescription();
-        electionPoll = new Poll(owners, electionTitle, description);
+        electionPoll = new Poll(owners, electionTitle, description, true);
 
         Poll.Option[] memory preWinners = getQualifiedCandidates();
 
@@ -123,69 +154,27 @@ contract Election {
         }
     }
 
-    function approveElection(address[] memory _guaranteers) public {
+    function startPreselection() onlyCouncelors public {
         if (state == State.CREATED) {
-            if (canApprove(_guaranteers)) {
-                setState(
-                    State.APPROVED,
-                    "Council has approved the referendum!"
-                );
-            } else {
-                revert(
-                    "Only Members of the council can approve consultations."
-                );
-            }
+            setState(State.PRESELECTION, "Council has approved the referendum!");
         } else {
-            revert(
-                "Consultation is not in the 'Created' state and can therefore not be approved."
-            );
+            revert("Consultation is not in the 'Approved' state and can therefore not be started.");
         }
     }
 
-    function startPreselection(address[] memory _leaders) public {
-        if (state == State.APPROVED) {
-            if (canStart(_leaders)) {
-                setState(
-                    State.PRESELECTION,
-                    "Council has approved the referendum!"
-                );
-            } else {
-                revert(
-                    "Only Members of the council can approve consultations."
-                );
-            }
-        } else {
-            revert(
-                "Consultation is not in the 'Approved' state and can therefore not be started."
-            );
-        }
-    }
-
-    function startElection(address[] memory _leaders) public {
+    function startElection() onlyCouncelors public {
         if (state == State.PRESELECTION) {
-            if (canStart(_leaders)) {
-                createElection();
-                setState(
-                    State.ELECTION,
-                    "Council has approved the referendum!"
-                );
-            } else {
-                revert(
-                    "Only Members of the council can approve consultations."
-                );
-            }
+            setState(State.ELECTION, "Council has approved the referendum!");
         } else {
-            revert(
-                "Consultation is not in the 'Approved' state and can therefore not be started."
-            );
+            revert("Consultation is not in the 'Approved' state and can therefore not be started.");
         }
     }
 
-    function finishElection() private {
+    function finishElection() onlyCouncelors private {
         if (state == State.ELECTION) {
             if (hasMinimumVoterTurnout()) {} else {
                 cancel(
-                    CancelationReason.NOTENOUGHVOTERTURNOUT,
+                    CancelReason.NOTENOUGHVOTERTURNOUT,
                     "Consultation canceled: Voter turnout has been too small!"
                 );
             }
@@ -196,18 +185,7 @@ contract Election {
         }
     }
 
-    function cancelElectionByCouncil() public {
-        if (canCancel()) {
-            cancel(
-                CancelationReason.CANCELEDBYCOUNCIL,
-                "Consultation canceled by Council!"
-            );
-        } else {
-            revert("Only Members of the council can cancel consultations.");
-        }
-    }
-
-    function cancel(CancelationReason _reason, string memory _description) private {
+    function cancel(CancelReason _reason, string memory _description) onlyCouncelors private {
         setState(State.CANCELED, _description);
         cancelationReason = _reason;
     }
@@ -216,50 +194,50 @@ contract Election {
     // ----- Manage Preselection ---------
     // -----------------------------------
 
-    function addCandidate(address _candidate) public isActive {
-        if (state == State.PRESELECTION) {
-            if (canAddCandidate()) {
-                if (!isCandidateAlreadyNominated(_candidate)) {
-                    AccountManagement.User memory user = accMng.getUser( _candidate );
-                    preSelectionPoll.addOption( _candidate, false, user.firstName, user.lastName );
-                } else {
-                    revert("Candidate already nominated!");
-                }
+    function addCandidate(address _candidate) public onlyIfIsActive {
+        // adds a new candidate to the preselection poll
+
+        if (canAddCandidate()) {
+            if (!isCandidateAlreadyNominated(_candidate)) {
+                AccountManagement.User memory user = accMng.getUser(_candidate);
+                preSelectionPoll.addOption(_candidate, false, user.firstName, user.lastName );
             } else {
-                revert("No sufficient rights!");
+                revert("Candidate already nominated!");
             }
         } else {
-            revert("Election is not in state PreSelection!");
+            revert("No sufficient rights!");
         }
     }
 
-    function acceptCandidature() public isActive {
-        if (state == State.PRESELECTION) {
-            Poll.Option[] memory candidates = preSelectionPoll.getOptions();
-            for (uint256 i = 0; i < candidates.length; i++) {
-                if (msg.sender == candidates[i].owner) {
-                    if (!candidates[i].isActive) { 
-                        preSelectionPoll.enableOption(candidates[i].id);
-                        return;
-                    } else {
-                        revert("Candidature was already accepted!");
-                    }
+    function acceptCandidature() public onlyIfIsActive(){
+        // lets a candidate accept their own candidature
+
+        Poll.Option[] memory candidates = preSelectionPoll.getOptions();
+        for (uint256 i = 0; i < candidates.length; i++) {
+            if (msg.sender == candidates[i].owner) {
+                if (!candidates[i].isActive) { 
+                    preSelectionPoll.enableOption(candidates[i].id);
+                    return;
+                } else {
+                    revert("Candidature was already accepted!");
                 }
             }
-            revert("Candidate is not nominated!");
-        } else {
-            revert("Election is not in state PreSelection!");
         }
+        revert("Candidate is not nominated!");
     }
 
-    function supportCandidate(uint256 _optionId) public {
+    function supportCandidate(uint256 _optionId) onlyDuringPreselection public {
+        // members can support candidates so they reach the election phase
+
         if (canSupport()) {
             preSelectionPoll.voteForOption(_optionId);
         }
     }
 
-    function removeSupportFromCandidate() public isActive {
-        preSelectionPoll.removeVoteForOption();
+    function removeSupportFromCandidate(uint256 _optionId) public onlyDuringPreselection {
+        // members can withdraw their support from a candidate
+
+        preSelectionPoll.removeVoteForOption(_optionId);
     }
 
     // -----------------------------------
@@ -267,6 +245,8 @@ contract Election {
     // -----------------------------------
 
     function getNominatedCandidates() public view returns (Poll.Option[] memory) {
+        // Gets all candidates that have been nominated
+
         return preSelectionPoll.getOptions();
     }
 
@@ -346,11 +326,6 @@ contract Election {
         return topNCandidates;
     }
 
-    function getResult() public view returns (Result) {
-        Result res = Result.AYES;
-        return res;
-    }
-
     function getVoterTurnout() public view returns (uint256) {
         return preSelectionPoll.getVoterCount();
     }
@@ -404,7 +379,7 @@ contract Election {
 
     function canSupport() public view returns (bool) {
         address _userAddress = msg.sender;
-        if (accMng.hasRightToVote(_userAddress)) {
+        if (accMng.hasMemberRole(_userAddress) || accMng.hasCouncilMemberRole(_userAddress) || accMng.hasLeaderRole(_userAddress)) {
             return true;
         }
         return false;
@@ -412,7 +387,7 @@ contract Election {
 
     function canVote() public view returns (bool) {
         address _userAddress = msg.sender;
-        if (accMng.hasRightToVote(_userAddress)) {
+        if (accMng.hasMemberRole(_userAddress) || accMng.hasCouncilMemberRole(_userAddress) || accMng.hasLeaderRole(_userAddress)) {
             return true;
         }
         return false;

@@ -62,19 +62,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address[]",
-						"name": "_guaranteers",
-						"type": "address[]"
-					}
-				],
-				"name": "approveElection",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "canAddCandidate",
 				"outputs": [
@@ -185,17 +172,10 @@
 			},
 			{
 				"inputs": [],
-				"name": "cancelElectionByCouncil",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "cancelationReason",
 				"outputs": [
 					{
-						"internalType": "enum Election.CancelationReason",
+						"internalType": "enum Election.CancelReason",
 						"name": "",
 						"type": "uint8"
 					}
@@ -214,19 +194,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getElectionPoll",
-				"outputs": [
-					{
-						"internalType": "contract Poll",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -294,19 +261,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "getPreselectionPoll",
-				"outputs": [
-					{
-						"internalType": "contract Poll",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "getQualifiedCandidates",
 				"outputs": [
 					{
@@ -350,19 +304,6 @@
 						"internalType": "struct Poll.Option[]",
 						"name": "",
 						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getResult",
-				"outputs": [
-					{
-						"internalType": "enum Election.Result",
-						"name": "",
-						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -565,33 +506,27 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_optionId",
+						"type": "uint256"
+					}
+				],
 				"name": "removeSupportFromCandidate",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address[]",
-						"name": "_leaders",
-						"type": "address[]"
-					}
-				],
+				"inputs": [],
 				"name": "startElection",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address[]",
-						"name": "_leaders",
-						"type": "address[]"
-					}
-				],
+				"inputs": [],
 				"name": "startPreselection",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -652,34 +587,34 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x45f058bce10f81d18dbcd2b7b94548933e602b89e64b813d70d5972e628f90d0",
+			"keccak256": "0x7658ea6081f84f2e194aabb04fe7cce60fda0ba6637e86929cab6e563105a935",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://a5e5d74d27eeda576347dc2c943a5e891c4bb7164381291d9fc727488254c6d7",
-				"dweb:/ipfs/QmXFvdJf61YhNTo8i2dH7segVtdoN6zaMgUoavTzBzoBgY"
+				"bzz-raw://4e7ab1c90d73084330639281b8fde05cdf536cb0579b7bfdcc3953534296c473",
+				"dweb:/ipfs/QmTxK87SredP1yVfVcYfQiCoS1xR2L7Ag3gyAdfCrkF2jx"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x97f0818b10ca85c05dd91545be14ad5bbcb67cd62f04ec0acf06e4ffb03bdda6",
+			"keccak256": "0x3b392e496dd7079f477d9352b4a3bf4c7a5c305d5860c8226a9e3bdabb506424",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://9601f35f7b4bb295de29bad24054d9608e687011d6534b46e63f043769c4e6c1",
-				"dweb:/ipfs/QmPuzV3Eba9e8s8cJ9ExJWEDRd6dkwgYzVdBTW9YoBCNUG"
+				"bzz-raw://d0e2828dc59e299ce19c8b8462041cce31ae833cc2780140afd2a8a0c532043f",
+				"dweb:/ipfs/Qmeaw5Uvd3MaHGvTVAVoEMoLxY1yzWr9jnENM336MbhRnJ"
 			]
 		},
 		"OnDemo/contracts/PollTypes/Election.sol": {
-			"keccak256": "0x71b1c8fad9d17bb65dc5ce82bf80b05f1930d841b82a656290752dfe0f01e3d6",
+			"keccak256": "0x2d2e03d8d28dc03bbe2ad78636989e81aede7d0f1894dad51a69df50a418d3d2",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://57f7efa46a82e37900e7771933de2f9bf99bdac528750c5117a9d9ae07dcdba5",
-				"dweb:/ipfs/QmaaeobuZahsKhQdqcKi9qTkqi5P4zR7RJa124UU64XEm4"
+				"bzz-raw://e506fa3b3f0f4833b9bd0320d14b739dde69c231d0a959d26a1090d158c6cef1",
+				"dweb:/ipfs/QmYV6mEM8e5mMMe4Zdq8xM3vefPPAxTJdvWZ3Um1bhh1uh"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {
