@@ -20,9 +20,9 @@ contract Election {
     }
     enum State { 
         CREATED, 
-        PRESELECTION, 
+        NOMINATION, 
         ELECTION,
-        ELECTED, 
+        INAUGURATION, 
         CLOSED, 
         CANCELED 
     }
@@ -51,7 +51,7 @@ contract Election {
     CancelReason public cancelationReason;
 
     AccountManagement private accMng;
-    Poll private preSelectionPoll;
+    Poll private nominationPoll;
     Poll private electionPoll;
     Utils private utils;
 
@@ -84,7 +84,7 @@ contract Election {
         candidates[2] = 0x5c6B0f7Bf3E7ce046039Bd8FABdfD3f9F5021678;
 
         
-        accMng = AccountManagement(0x6E111eaf89bbfC1210F413f63f0A35D34a75243f);
+        accMng = AccountManagement(0xd9145CCE52D386f254917e481eB44e9943F39138);
         string memory _title = "Elect new leadership";
         string memory _description = "A new leadership board should be instituted";
         AccountManagement.Role _role = AccountManagement.Role.LEADER;
@@ -119,12 +119,12 @@ contract Election {
         // checks if the election is in an active state
 
         bool active = false;
-        if (state == State.PRESELECTION) {
+        if (state == State.NOMINATION) {
             if (!hasDeadlinePassed()) {
                 active = true;
             }
         }
-        require(active, "The poll must be preselection state!");
+        require(active, "The poll must be nomination state!");
         _;
     }
 
@@ -137,7 +137,7 @@ contract Election {
                 active = true;
             }
         }
-        require(active, "The poll must be preselection state!");
+        require(active, "The poll must be nomination state!");
         _;
     }
 
@@ -160,7 +160,7 @@ contract Election {
         
         if (canCreate(_owners)) {
             utils = new Utils();
-            preSelectionPoll = new Poll(_owners, _title, _description, false);
+            nominationPoll = new Poll(_owners, _title, _description, false);
             owners = _owners;
             role = _role;
             maxCandidates = _maxCandidates;            
@@ -170,10 +170,10 @@ contract Election {
     }
 
     function createElection() onlyCouncelors private {
-        // Creates a poll in which all qualified candidates from the preselection poll are added
+        // Creates a poll in which all qualified candidates from the nomination poll are added
 
-        string memory electionTitle = preSelectionPoll.getTitle();
-        string memory description = preSelectionPoll.getDescription();
+        string memory electionTitle = nominationPoll.getTitle();
+        string memory description = nominationPoll.getDescription();
         electionPoll = new Poll(owners, electionTitle, description, true);
 
         Poll.Option[] memory preWinners = getQualifiedCandidates();
@@ -191,26 +191,27 @@ contract Election {
 
     function startPreselection() onlyCouncelors public {
         if (state == State.CREATED) {
-            setState(State.PRESELECTION, "Council has approved the referendum!");
+            setState(State.NOMINATION, "Council has approved the referendum!");
         } else {
             revert("Consultation is not in the 'Approved' state and can therefore not be started.");
         }
     }
 
     function startElection() onlyCouncelors public {
-        if (state == State.PRESELECTION) {
+        if (state == State.NOMINATION) {
             createElection();
-            preSelectionPoll.disable(msg.sender);
+            nominationPoll.disable(msg.sender);
             setState(State.ELECTION, "Council has approved the referendum!");
         } else {
             revert("Consultation is not in the 'Approved' state and can therefore not be started.");
         }
     }
 
-    function finishElection() onlyCouncelors public {
+    function inaugurateElected() onlyCouncelors public {
         if (state == State.ELECTION) {
             if (hasMinimumVoterTurnout()) {
-                setState(State.ELECTED, "Council has approved the referendum!");
+                assignToBoard();
+                setState(State.INAUGURATION, "Council has approved the referendum!");
             } else if(hasDeadlinePassed()){
                 cancel(CancelReason.NOTENOUGHVOTERTURNOUT, "Consultation canceled: Voter turnout has been too small!");
             }
@@ -223,10 +224,10 @@ contract Election {
     }
 
     function closeElection() onlyCouncelors public {
-        if (state == State.ELECTED) {
+        if (state == State.INAUGURATION) {
             setState(State.CLOSED, "Council has approved the referendum!");
         } else {
-            revert("Consultation is not in the 'ELECTED' state.");
+            revert("Consultation is not in the 'INAUGURATION' state.");
         }
     } 
 
@@ -240,12 +241,12 @@ contract Election {
     // -----------------------------------
 
     function addCandidate(address _candidate) public onlyIfIsActive {
-        // adds a new candidate to the preselection poll
+        // adds a new candidate to the nomination poll
 
         if (canAddCandidate()) {
             if (!isCandidateAlreadyNominated(_candidate)) {
                 AccountManagement.User memory user = accMng.getUser(_candidate);
-                preSelectionPoll.addOption(msg.sender, _candidate, false, user.firstName, user.lastName );
+                nominationPoll.addOption(msg.sender, _candidate, false, user.firstName, user.lastName );
             } else {
                 revert("Candidate already nominated!");
             }
@@ -257,11 +258,11 @@ contract Election {
     function acceptCandidature() public onlyIfIsActive(){
         // lets a candidate accept their own candidature
 
-        Poll.Option[] memory candidates = preSelectionPoll.getOptions();
+        Poll.Option[] memory candidates = nominationPoll.getOptions();
         for (uint i = 0; i < candidates.length; i++) {
             if (msg.sender == candidates[i].owner) {
                 if (!candidates[i].isActive) { 
-                    preSelectionPoll.enableOption(candidates[i].id);
+                    nominationPoll.enableOption(candidates[i].id);
                     return;
                 } else {
                     revert("Candidature was already accepted!");
@@ -275,14 +276,14 @@ contract Election {
         // members can support candidates so they reach the election phase
 
         if (canSupport()) {
-            preSelectionPoll.voteForOption(msg.sender, _optionId);
+            nominationPoll.voteForOption(msg.sender, _optionId);
         }
     }
 
     function removeSupportFromCandidate(uint _optionId) public onlyDuringPreselection {
         // members can withdraw their support from a candidate
 
-        preSelectionPoll.removeVoteForOption(msg.sender, _optionId);
+        nominationPoll.removeVoteForOption(msg.sender, _optionId);
     }
 
     // -----------------------------------
@@ -297,7 +298,7 @@ contract Election {
 
     function removeVote() public onlyDuringElection {
         // members can withdraw their support from a candidate
-        preSelectionPoll.removeVoteForOption(msg.sender);
+        nominationPoll.removeVoteForOption(msg.sender);
     }
 
 
@@ -309,13 +310,13 @@ contract Election {
     function getNominatedCandidates() public view returns (Poll.Option[] memory) {
         // Gets all candidates that have been nominated
 
-        return preSelectionPoll.getOptions();
+        return nominationPoll.getOptions();
     }
 
     function getRunningCandidates() public view returns (Poll.Option[] memory) {
         // Gets all candidates that accepted their candidature
 
-        Poll.Option[] memory candidates = preSelectionPoll.getOptions();
+        Poll.Option[] memory candidates = nominationPoll.getOptions();
         Poll.Option[] memory acceptedCandidates = new Poll.Option[](candidates.length);
 
         uint count = 0;
@@ -403,8 +404,8 @@ contract Election {
         return topNCandidates;
     }
 
-    function appointWinningCandidates() public {   
-        if(state == State.ELECTED) {
+    function assignToBoard() public {   
+        if(state == State.INAUGURATION) {
             Poll.Option[] memory winningCandidates = getWinningCandidates();
             address[] memory candidateAddreses = new address[](winningCandidates.length);
             for (uint i = 0; i < winningCandidates.length; i++) {
@@ -420,12 +421,12 @@ contract Election {
             }   
         }     
         else{
-            revert("Election is not in state ELECTED");
+            revert("Election is not in state INAUGURATION");
         }
     }
 
     function getVoterTurnout() public view returns (uint) {
-        return preSelectionPoll.getVoterCount();
+        return nominationPoll.getVoterCount();
     }
 
     function getMinimalVoterTurnout() public view returns (uint) {
@@ -506,7 +507,7 @@ contract Election {
     function hasDeadlinePassed() public view returns (bool) {
         bool deadlineReached = false;
         uint timestamp = block.timestamp;
-        uint deadline = preSelectionPoll.getCreationDate() + (daysOpen * 1 days);
+        uint deadline = nominationPoll.getCreationDate() + (daysOpen * 1 days);
 
         if (timestamp > deadline) {
             deadlineReached = true;
@@ -522,7 +523,7 @@ contract Election {
     }
 
     function isCandidateAlreadyNominated(address _candidate) public view returns (bool) {
-        Poll.Option[] memory candidates = preSelectionPoll.getOptions();
+        Poll.Option[] memory candidates = nominationPoll.getOptions();
         for (uint i = 0; i < candidates.length; i++) {
             if (_candidate == candidates[i].owner) {
                 return true;

@@ -70,7 +70,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "appointWinningCandidates",
+				"name": "assignToBoard",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -215,13 +215,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "finishElection",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -546,6 +539,13 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "inaugurateElected",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -685,11 +685,11 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0xa8cce11954355e20bc6527f82dc959820f7ca435819048d743d5f2df49adc847",
+			"keccak256": "0xacd11913242dc5bd7a54c471e8349a6c7911849e9e8490b3da75771e4d8929b0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://d309f66117423d25b105fa5f4b289337dd4ada60c13b1b8e770e3d876eebf65a",
-				"dweb:/ipfs/QmXF331VHVkLTzLVX2jHdtX5n62yRGjGcPqyiifjB2sr9V"
+				"bzz-raw://30e60fa56f275e2ec4cd5bb020f8456e625e17f9dea6ad6216c427d93728cefd",
+				"dweb:/ipfs/QmPjLeTa2J2cGkQtRspjqhiDaoPGnfM6P3sXcUL9pmhbnt"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
@@ -701,11 +701,11 @@
 			]
 		},
 		"OnDemo/contracts/PollTypes/Election.sol": {
-			"keccak256": "0x30a264619f187a3ad7b9cc2073fdffef35ba7c9f9f0f1a643d9224c8c7c9eb80",
+			"keccak256": "0xe27998b73a8ac0f9b2993a0e2ba845761b69d3be3d7f4957486994e1d42117f5",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://3f5d5a4e6a074b9954e387f1c6db0b5c90d076a8c4603b292e12e63e62c4f437",
-				"dweb:/ipfs/QmXZCJajqhtijuQW9nxwHRgtuf1p2QuhcJXuUAD9o8KEUt"
+				"bzz-raw://d747312dab678008ca76ebe5e850f8f9c8640868925bc5202e59c5f3f5925d7f",
+				"dweb:/ipfs/QmbeCs9s36wS23RHe3FiW6mkXwZRKNbZByBGs2bo22p8Sw"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {
