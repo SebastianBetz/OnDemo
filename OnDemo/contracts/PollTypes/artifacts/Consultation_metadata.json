@@ -187,6 +187,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "close",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "daysOpen",
 				"outputs": [
 					{
@@ -336,6 +343,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "result",
+				"outputs": [
+					{
+						"internalType": "enum Consultation.Result",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "start",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -397,27 +417,27 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x7658ea6081f84f2e194aabb04fe7cce60fda0ba6637e86929cab6e563105a935",
+			"keccak256": "0xacd11913242dc5bd7a54c471e8349a6c7911849e9e8490b3da75771e4d8929b0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://4e7ab1c90d73084330639281b8fde05cdf536cb0579b7bfdcc3953534296c473",
-				"dweb:/ipfs/QmTxK87SredP1yVfVcYfQiCoS1xR2L7Ag3gyAdfCrkF2jx"
+				"bzz-raw://30e60fa56f275e2ec4cd5bb020f8456e625e17f9dea6ad6216c427d93728cefd",
+				"dweb:/ipfs/QmPjLeTa2J2cGkQtRspjqhiDaoPGnfM6P3sXcUL9pmhbnt"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x129ee2f56ed9206ac98778e007aa1a41248c4ec209086a9d61666f124f62812e",
+			"keccak256": "0x0ab4456046781a7bc24b1bb58230fde6ec4054f3511029e53b1faed9744715dc",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://0bf12cee7a160378b436f6049bf49b961f9c5ba95bc69f6d56498ee6c0e58d6e",
-				"dweb:/ipfs/QmYm7DKNeXBfJnwVDquFi4qdvBxcbvuLTqPkm8fg6J5JCd"
+				"bzz-raw://cc52923b61c33b2411453e7a71760a58c2523d1f3680cfeeb1b8f05f77aa6909",
+				"dweb:/ipfs/QmNhFFZEBspKRwndKbJaQ4A2qrj15YRotzEyuEnbd3Ws86"
 			]
 		},
 		"OnDemo/contracts/PollTypes/Consultation.sol": {
-			"keccak256": "0x88d3f4adeecd5dcfdd664138ea4e4bd6dbb22db36f53e4a7a3fbafce3b3283fe",
+			"keccak256": "0x510087bd4a9d7c1520e3c0b686580d02cbb91583bcf1eeb37c0b3849e7448cc1",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://d2ec53b60a0d57645dd9f8e106a75a24b1e530e5d4d10576dc6e33d9363c35da",
-				"dweb:/ipfs/QmSUR5Z61wr4yaQy77dyviGTXnfFQc66HT5REx33vhPWQd"
+				"bzz-raw://6c812fa3c9807592f99a9225d923c0069a673a95bbd0529bd514a95c8e57493b",
+				"dweb:/ipfs/QmPUYLWmRWPKgVdhUBshZcL41RxTsvy1Z5NHWkhfaWyv2W"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

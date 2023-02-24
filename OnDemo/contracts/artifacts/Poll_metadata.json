@@ -63,7 +63,13 @@
 				"type": "event"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					}
+				],
 				"name": "activate",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -71,6 +77,11 @@
 			},
 			{
 				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_creator",
+						"type": "address"
+					},
 					{
 						"internalType": "address",
 						"name": "_owner",
@@ -111,7 +122,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					}
+				],
 				"name": "disable",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -133,12 +150,38 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					}
+				],
+				"name": "disablePoll",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "_optionId",
 						"type": "uint256"
 					}
 				],
 				"name": "enableOption",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					}
+				],
+				"name": "enablePoll",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -154,13 +197,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "freeze",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -190,20 +226,15 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "getOptionCount",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_id",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
+				"name": "getOptionById",
+				"outputs": [
 					{
 						"components": [
 							{
@@ -243,19 +274,11 @@
 							}
 						],
 						"internalType": "struct Poll.Option",
-						"name": "_o",
+						"name": "",
 						"type": "tuple"
 					}
 				],
-				"name": "getOptionId",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -348,51 +371,8 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "id",
-								"type": "uint256"
-							},
-							{
-								"internalType": "address",
-								"name": "owner",
-								"type": "address"
-							},
-							{
-								"internalType": "address",
-								"name": "creator",
-								"type": "address"
-							},
-							{
-								"internalType": "bool",
-								"name": "isActive",
-								"type": "bool"
-							},
-							{
-								"internalType": "string",
-								"name": "title",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "description",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "voterCount",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct Poll.Option",
-						"name": "_o",
-						"type": "tuple"
-					}
-				],
-				"name": "isOptionActive",
+				"inputs": [],
+				"name": "isPollActive",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -400,56 +380,7 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "options",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "creator",
-						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "isActive",
-						"type": "bool"
-					},
-					{
-						"internalType": "string",
-						"name": "title",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "voterCount",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -474,6 +405,11 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "_optionId",
 						"type": "uint256"
@@ -485,7 +421,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					}
+				],
 				"name": "removeVoteForOption",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -519,6 +461,11 @@
 			},
 			{
 				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					},
 					{
 						"internalType": "uint256",
 						"name": "_optionId",
@@ -572,11 +519,11 @@
 	},
 	"sources": {
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x7d230dd50e4559cacd5b63d9d506e4e06609374fb4927dfebc01cf0cfa55db81",
+			"keccak256": "0x0ab4456046781a7bc24b1bb58230fde6ec4054f3511029e53b1faed9744715dc",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://b1dbd7af974700125e772e46c29f519b6b5b7f8c3ccf05172ea2348775f7c605",
-				"dweb:/ipfs/QmerSJnFMwryQ9Xrfe5Ze8zMVxz7WCFAowyCkdDajYyTxN"
+				"bzz-raw://cc52923b61c33b2411453e7a71760a58c2523d1f3680cfeeb1b8f05f77aa6909",
+				"dweb:/ipfs/QmNhFFZEBspKRwndKbJaQ4A2qrj15YRotzEyuEnbd3Ws86"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

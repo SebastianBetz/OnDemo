@@ -27,6 +27,13 @@
 				"type": "constructor"
 			},
 			{
+				"inputs": [],
+				"name": "_testAccountManagement",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -43,16 +50,68 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_address",
+						"name": "_sender",
 						"type": "address"
 					},
 					{
-						"internalType": "enum AccountManagement.Role",
-						"name": "_role",
-						"type": "uint8"
+						"components": [
+							{
+								"internalType": "address[]",
+								"name": "members",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "electionTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "approved",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct AccountManagement.Council",
+						"name": "_council",
+						"type": "tuple"
 					}
 				],
-				"name": "assignRole",
+				"name": "appointCouncil",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_sender",
+						"type": "address"
+					},
+					{
+						"components": [
+							{
+								"internalType": "address[]",
+								"name": "members",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "electionTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "approved",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct AccountManagement.LeaderBoard",
+						"name": "_leaderBoard",
+						"type": "tuple"
+					}
+				],
+				"name": "appointLeaderBoard",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -101,6 +160,78 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address[]",
+						"name": "_members",
+						"type": "address[]"
+					}
+				],
+				"name": "createCouncil",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address[]",
+								"name": "members",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "electionTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "approved",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct AccountManagement.Council",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_members",
+						"type": "address[]"
+					}
+				],
+				"name": "createLeaderBoard",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address[]",
+								"name": "members",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "electionTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "approved",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct AccountManagement.LeaderBoard",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "_address",
 						"type": "address"
@@ -119,6 +250,66 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getCouncil",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address[]",
+								"name": "members",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "electionTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "approved",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct AccountManagement.Council",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getLeaderBoard",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address[]",
+								"name": "members",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "electionTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "approved",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct AccountManagement.LeaderBoard",
+						"name": "",
+						"type": "tuple"
 					}
 				],
 				"stateMutability": "view",
@@ -292,31 +483,6 @@
 						"internalType": "address",
 						"name": "_address",
 						"type": "address"
-					},
-					{
-						"internalType": "enum AccountManagement.Role",
-						"name": "_role",
-						"type": "uint8"
-					}
-				],
-				"name": "removeRole",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testAccountManagement",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
 					}
 				],
 				"name": "userExists",
@@ -359,11 +525,11 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x7658ea6081f84f2e194aabb04fe7cce60fda0ba6637e86929cab6e563105a935",
+			"keccak256": "0xacd11913242dc5bd7a54c471e8349a6c7911849e9e8490b3da75771e4d8929b0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://4e7ab1c90d73084330639281b8fde05cdf536cb0579b7bfdcc3953534296c473",
-				"dweb:/ipfs/QmTxK87SredP1yVfVcYfQiCoS1xR2L7Ag3gyAdfCrkF2jx"
+				"bzz-raw://30e60fa56f275e2ec4cd5bb020f8456e625e17f9dea6ad6216c427d93728cefd",
+				"dweb:/ipfs/QmPjLeTa2J2cGkQtRspjqhiDaoPGnfM6P3sXcUL9pmhbnt"
 			]
 		}
 	},

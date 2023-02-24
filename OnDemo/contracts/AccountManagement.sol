@@ -33,45 +33,95 @@ contract AccountManagement {
     }
 
     // the current leadership
-    struct LeadershipBoard{
+    struct LeaderBoard{
+        address[] members;
         uint electionTime;
         bool approved;
-        address[] members;
     }
 
     // the current council
     struct Council{
+        address[] members;
         uint electionTime;
         bool approved;
-        address[] members;
     }
 
     uint private activeMemberCount; // keep track of how many users with at least the Role "Member" exist, which are active
     address public owner;
+
+    LeaderBoard private leaderBoard;
+    Council private council;
     mapping(address => User) private users; // all users registered  
     mapping(address => bool) private activeMembers; // keep track of all users who have a role different to guest and are active, so we know who can vote on referendums
 
     constructor(string memory _firstName, string memory _lastName, string memory _mailAdress) {
         owner = msg.sender;
         createAccount(msg.sender, _firstName, _lastName, _mailAdress);      
-        assignRole(msg.sender, Role.LEADER);
-        assignRole(msg.sender, Role.COUNCILMEMBER);
-        assignRole(msg.sender, Role.MEMBER);
-        removeRole(msg.sender, Role.GUEST);  
+        assignRole(msg.sender, msg.sender, Role.LEADER);
+        assignRole(msg.sender, msg.sender, Role.COUNCILMEMBER);
+        assignRole(msg.sender, msg.sender, Role.MEMBER);
+        removeRole(msg.sender, msg.sender, Role.GUEST);  
         activateAccount(msg.sender);
+    }
+
+    function _testAccountManagement() public{
+
+        address[10] memory testAccounts = [ 
+            0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,
+            0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2,
+            0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db,
+            0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB,
+            0x617F2E2fD72FD9D5503197092aC168c91465E7f2,
+            0x17F6AD8Ef982297579C203069C1DbfFE4348c372,
+            0x5c6B0f7Bf3E7ce046039Bd8FABdfD3f9F5021678,
+            0x03C6FcED478cBbC9a4FAB34eF9f40767739D1Ff7,
+            0x1aE0EA34a72D944a8C7603FfB3eC30a6669E454C,
+            0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c
+        ];
+
+        string[10] memory firstNames = ["Rick", "Vanessa", "Alex", "Vici", "Lu", "John", "Sarah", "Samantha", "Peter", "David"];
+        string[10] memory lastNames = ["Patel","Kim","Brown","Davis","Martinez","Wilson","Garcia","Jones","Jackson","Smith"];
+        string[10] memory mailAdresses = [ "Rick.Patel@por.com","Vanessa.Kim@por.com", "Alex.Brown@por.com","Vici.Davis@por.com","Lu.Martinez@por.com","John.Wilson@por.com","Sarah.Garcia@por.com","Samantha.Jones@por.com","Peter.Jackson@por.com","David.Smith@por.com"];
+        for(uint i = 0; i < testAccounts.length; i++)
+        {
+            address acc = testAccounts[i];
+            if(!this.userExists(acc))
+            {
+                createAccount(acc, firstNames[i], lastNames[i], mailAdresses[i]);
+                assignRole(msg.sender, acc, Role.MEMBER);
+                removeRole(msg.sender, acc, Role.GUEST);  
+                activateAccount(acc);
+            }
+        }
+        
+        address[] memory newLeaders = new address[](2);
+        newLeaders[0] = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
+        newLeaders[1] = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
+
+        LeaderBoard memory l = createLeaderBoard(newLeaders);
+        appointLeaderBoard(msg.sender, l);
+
+        
+        address[] memory newCouncil = new address[](2);
+        newCouncil[0] = 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db;
+        newCouncil[1] = 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB;
+
+        Council memory c = createCouncil(newCouncil);
+        appointCouncil(msg.sender, c);
+        
     }
 
     // ------------------------------------
     // ------------ Modifiers -------------
     // ------------------------------------
     
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can call this function.");
+    modifier onlyOwner(address _sender) {
+        require(_sender == owner, "Only owner can call this function.");
         _;
     }
 
-    modifier onlyLeader() {
-        require(msg.sender == owner || this.hasLeaderRole(msg.sender), "Only owner can call this function.");
+    modifier onlyLeader(address _sender) {
+        require(_sender == owner || this.hasLeaderRole(_sender), "Only owner can call this function.");
         _;
     }
 
@@ -135,12 +185,12 @@ contract AccountManagement {
     // ------ Role management ------------
     // -----------------------------------
 
-    function assignRole(address _address, Role _role) public onlyLeader onlyIfUserExists(_address){
+    function assignRole(address _sender, address _address, Role _role) private onlyLeader(_sender) onlyIfUserExists(_address){
         // assigns a role to a user
         User storage user = users[_address];
         RoleMap storage roleMap = user.roleMap;
 
-        if(_role == Role.LEADER){
+        if(_role == Role.LEADER){            
             roleMap.isLeader = true;
         }
         else if(_role == Role.COUNCILMEMBER){
@@ -154,7 +204,7 @@ contract AccountManagement {
         }
     }
 
-    function removeRole(address _address, Role _role) public onlyLeader onlyIfUserExists(_address){
+    function removeRole(address _sender, address _address, Role _role) private onlyLeader(_sender) onlyIfUserExists(_address){
         // removes a role from a user
         User storage user = users[_address];
         RoleMap storage roleMap = user.roleMap;
@@ -175,42 +225,98 @@ contract AccountManagement {
 
     // Setting roles
 
-    function assignLeader(address _address) private onlyLeader onlyIfUserExists(_address){        
-        assignRole(_address, Role.LEADER);
+    function assignLeader(address _sender, address _address) private onlyLeader(_sender) onlyIfUserExists(_address){        
+        assignRole(_sender, _address, Role.LEADER);
     }
     
-    function assignCouncilMember(address _address) private onlyLeader onlyIfUserExists(_address){
-        assignRole(_address, Role.COUNCILMEMBER);
+    function assignCouncilMember(address _sender, address _address) private onlyLeader(_sender) onlyIfUserExists(_address){
+        assignRole(_sender, _address, Role.COUNCILMEMBER);
     }
 
-    function assignMember(address _address) private onlyLeader onlyIfUserExists(_address){
-        assignRole(_address, Role.MEMBER);
+    function assignMember(address _sender, address _address) private onlyLeader(_sender) onlyIfUserExists(_address){
+        assignRole(_sender, _address, Role.MEMBER);
     }
     
-    function assignGuest(address _address) private onlyLeader onlyIfUserExists(_address){
-        assignRole(_address, Role.GUEST);
+    function assignGuest(address _sender, address _address) private onlyLeader(_sender) onlyIfUserExists(_address){
+        assignRole(_sender, _address, Role.GUEST);
     }    
 
     // Removing roles
 
-    function removeLeader(address _address) private onlyLeader onlyIfUserExists(_address){
-        removeRole(_address, Role.LEADER);
+    function removeLeader(address _sender, address _address) private onlyLeader(_sender) onlyIfUserExists(_address){
+        removeRole(_sender, _address, Role.LEADER);
     }
     
-    function removeCouncilMember(address _address) private onlyLeader onlyIfUserExists(_address){
-        removeRole(_address, Role.COUNCILMEMBER);
+    function removeCouncilMember(address _sender, address _address) private onlyLeader(_sender) onlyIfUserExists(_address){
+        removeRole(_sender, _address, Role.COUNCILMEMBER);
     }
 
-    function removeMember(address _address) private onlyLeader onlyIfUserExists(_address){
-        removeRole(_address, Role.MEMBER);
+    function removeMember(address _sender, address _address) private onlyLeader(_sender) onlyIfUserExists(_address){
+        removeRole(_sender, _address, Role.MEMBER);
     }
     
-    function removeGuest(address _address) private onlyLeader onlyIfUserExists(_address){
-        removeRole(_address, Role.GUEST);
+    function removeGuest(address _sender, address _address) private onlyLeader(_sender) onlyIfUserExists(_address){
+        removeRole(_sender, _address, Role.GUEST);
     }  
 
 
+    // -----------------------------------
+    // --------- LeaderBoard -------------
+    // -----------------------------------
+    function createLeaderBoard(address[] memory _members) public view returns(LeaderBoard memory){
+        uint electionTime = block.timestamp;
+        LeaderBoard memory l = LeaderBoard(_members, electionTime, false);
+        return l;
+    }
 
+    function appointLeaderBoard(address _sender, LeaderBoard memory _leaderBoard) public {
+        address[] memory members = _leaderBoard.members;
+        for(uint i = 0; i < members.length; i++)
+        {
+            assignLeader(_sender, members[i]);
+        }
+        dismissLeaderBoard(_sender);
+        _leaderBoard.approved = true;
+        leaderBoard = _leaderBoard;
+    }
+
+    function dismissLeaderBoard(address _sender) private{
+        address[] memory members = leaderBoard.members;
+        for(uint i = 0; i < members.length; i++)
+        {
+            removeLeader(_sender, members[i]);
+        }
+    }
+
+
+    // -----------------------------------
+    // ------------ Council --------------
+    // -----------------------------------
+
+    function createCouncil(address[] memory _members) public view returns(Council memory){
+        uint electionTime = block.timestamp;
+        Council memory l = Council(_members, electionTime, false);
+        return l;
+    }
+
+    function appointCouncil(address _sender, Council memory _council) public {
+        address[] memory members = _council.members;
+        for(uint i = 0; i < members.length; i++)
+        {
+            assignCouncilMember(_sender, members[i]);
+        }
+        dismissCouncil(_sender);
+        _council.approved = true;
+        council = _council;
+    }
+
+    function dismissCouncil(address _sender) private{
+        address[] memory members = council.members;
+        for(uint i = 0; i < members.length; i++)
+        {
+            removeCouncilMember(_sender, members[i]);
+        }
+    }
 
 
     // -----------------------------------
@@ -274,43 +380,12 @@ contract AccountManagement {
         return u.userAddress != address(0);
     }
 
-    function testAccountManagement() public{
-
-        address[10] memory testAccounts = [ 
-            0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2,
-            0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db,
-            0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB,
-            0x617F2E2fD72FD9D5503197092aC168c91465E7f2,
-            0x17F6AD8Ef982297579C203069C1DbfFE4348c372,
-            0x5c6B0f7Bf3E7ce046039Bd8FABdfD3f9F5021678,
-            0x03C6FcED478cBbC9a4FAB34eF9f40767739D1Ff7,
-            0x1aE0EA34a72D944a8C7603FfB3eC30a6669E454C,
-            0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c,
-            0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C];
-
-        string[10] memory firstNames = ["Rick", "Vanessa", "Alex", "Vici", "Lu", "John", "Sarah", "Samantha", "Peter", "David"];
-        string[10] memory lastNames = ["Patel","Kim","Brown","Davis","Martinez","Wilson","Garcia","Jones","Jackson","Smith"];
-        string[10] memory mailAdresses = [ "Rick.Patel@por.com","Vanessa.Kim@por.com", "Alex.Brown@por.com","Vici.Davis@por.com","Lu.Martinez@por.com","John.Wilson@por.com","Sarah.Garcia@por.com","Samantha.Jones@por.com","Peter.Jackson@por.com","David.Smith@por.com"];
-        for(uint i = 0; i < testAccounts.length; i++)
-        {
-            address acc = testAccounts[i];
-            if(!this.userExists(acc))
-            {
-                createAccount(acc, firstNames[i], lastNames[i], mailAdresses[i]);
-                assignRole(acc, Role.MEMBER);
-                removeRole(acc, Role.GUEST);  
-
-                if(i < 2){
-                    assignRole(acc, Role.LEADER);
-                }
-                else if(i < 4){
-                    assignRole(acc, Role.COUNCILMEMBER);
-                }
-
-                activateAccount(acc);
-            }
-        }
+    function getLeaderBoard() external view returns(LeaderBoard memory){
+        return leaderBoard;
     }
 
+    function getCouncil() external view returns(Council memory){
+        return council;
+    }
 }
 

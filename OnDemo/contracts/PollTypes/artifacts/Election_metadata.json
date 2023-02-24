@@ -43,6 +43,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "_testElection",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "acceptCandidature",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -57,6 +64,13 @@
 					}
 				],
 				"name": "addCandidate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "appointWinningCandidates",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -185,6 +199,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "closeElection",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "daysOpen",
 				"outputs": [
 					{
@@ -194,6 +215,63 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "finishElection",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getElectableCandidates",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "creator",
+								"type": "address"
+							},
+							{
+								"internalType": "bool",
+								"name": "isActive",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voterCount",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Poll.Option[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -419,7 +497,7 @@
 						"type": "tuple[]"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -520,6 +598,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "removeVote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "startElection",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -559,8 +644,14 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "testElection",
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_optionId",
+						"type": "uint256"
+					}
+				],
+				"name": "voteForCandidate",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -594,27 +685,27 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x7658ea6081f84f2e194aabb04fe7cce60fda0ba6637e86929cab6e563105a935",
+			"keccak256": "0xa8cce11954355e20bc6527f82dc959820f7ca435819048d743d5f2df49adc847",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://4e7ab1c90d73084330639281b8fde05cdf536cb0579b7bfdcc3953534296c473",
-				"dweb:/ipfs/QmTxK87SredP1yVfVcYfQiCoS1xR2L7Ag3gyAdfCrkF2jx"
+				"bzz-raw://d309f66117423d25b105fa5f4b289337dd4ada60c13b1b8e770e3d876eebf65a",
+				"dweb:/ipfs/QmXF331VHVkLTzLVX2jHdtX5n62yRGjGcPqyiifjB2sr9V"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x3b392e496dd7079f477d9352b4a3bf4c7a5c305d5860c8226a9e3bdabb506424",
+			"keccak256": "0x0ab4456046781a7bc24b1bb58230fde6ec4054f3511029e53b1faed9744715dc",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://d0e2828dc59e299ce19c8b8462041cce31ae833cc2780140afd2a8a0c532043f",
-				"dweb:/ipfs/Qmeaw5Uvd3MaHGvTVAVoEMoLxY1yzWr9jnENM336MbhRnJ"
+				"bzz-raw://cc52923b61c33b2411453e7a71760a58c2523d1f3680cfeeb1b8f05f77aa6909",
+				"dweb:/ipfs/QmNhFFZEBspKRwndKbJaQ4A2qrj15YRotzEyuEnbd3Ws86"
 			]
 		},
 		"OnDemo/contracts/PollTypes/Election.sol": {
-			"keccak256": "0x2d2e03d8d28dc03bbe2ad78636989e81aede7d0f1894dad51a69df50a418d3d2",
+			"keccak256": "0x30a264619f187a3ad7b9cc2073fdffef35ba7c9f9f0f1a643d9224c8c7c9eb80",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://e506fa3b3f0f4833b9bd0320d14b739dde69c231d0a959d26a1090d158c6cef1",
-				"dweb:/ipfs/QmYV6mEM8e5mMMe4Zdq8xM3vefPPAxTJdvWZ3Um1bhh1uh"
+				"bzz-raw://3f5d5a4e6a074b9954e387f1c6db0b5c90d076a8c4603b292e12e63e62c4f437",
+				"dweb:/ipfs/QmXZCJajqhtijuQW9nxwHRgtuf1p2QuhcJXuUAD9o8KEUt"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {

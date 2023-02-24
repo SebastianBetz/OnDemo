@@ -11,7 +11,6 @@ contract Poll {
     enum State { 
         CREATED, 
         ACTIVE,     // Votes can be casted
-        FROZEN,     // Edits are not possible
         DEACTIVATED // Edits are not possible
     }
 
@@ -38,7 +37,7 @@ contract Poll {
     string public title;
     string public description;
     uint private creationDate;       
-    Option[] public options;   
+    Option[] private options;   
     uint public voterCount;   
     State public state;
     bool public exclusiveVote; // if true a voter can only vote on one option
@@ -47,22 +46,42 @@ contract Poll {
 
     Utils private utils;
 
+    
     constructor(address[] memory _owners, string memory _title, string memory _description, bool _exclusiveVote) {
         utils = new Utils();
         create(_owners, _title, _description, _exclusiveVote);    
     }
+    
+    /*    
+    // testing
+    // use this constructor and the testPoll function to test the polling interface
+    
+    constructor() {
+        utils = new Utils();
+        testPoll(); 
+    }
 
-
+    function testPoll() public {
+        address[] memory _owners = new address[](1);
+        _owners[0] = msg.sender;
+        string memory _title = "MyPoll";
+        string memory _description = "MyPoll";
+        create(_owners, _title, _description, false); 
+        addOption(msg.sender, msg.sender, true, "A", "");
+        addOption(msg.sender, msg.sender, true, "B", "");
+    }
+    
+    */
 
 
     // -----------------------------------
     // ------- Manage Polls --------
     // -----------------------------------
 
-    modifier onlyOwners {
+    modifier onlyOwners (address _userAddress){
         bool isOwner = true;
         for (uint i = 0; i < owners.length; i++) {
-            if (msg.sender == owners[i]) {
+            if (_userAddress == owners[i]) {
                 isOwner = true;
                 break;
             }
@@ -102,15 +121,11 @@ contract Poll {
         return id;
     }
 
-    function activate() onlyOwners public {
+    function activate(address _userAddress) onlyOwners(_userAddress) public {
         setState(State.ACTIVE, "Poll activated!");
     }
 
-    function freeze() onlyOwners public {
-        setState(State.FROZEN, "Poll frozen!");
-    }
-
-    function disable() onlyOwners public {
+    function disable(address _userAddress) onlyOwners(_userAddress) public {
         setState(State.DEACTIVATED, "Poll disabled!");
     }
 
@@ -119,13 +134,12 @@ contract Poll {
     // ------- Manage Options ------------
     // -----------------------------------
 
-    function addOption(address _owner, bool _enabled, string memory _title, string memory _description) isActive onlyOwners public {
+    function addOption(address _creator, address _owner, bool _enabled, string memory _title, string memory _description) isActive onlyOwners(_creator) public {
         // options are connected to polls
         // option ids start with 1000 to be able to distniguish in the mapping who has voted for an option and who hasn't (meaning returning a value of 0)
-
-        address creator = msg.sender;               
+           
         uint optionId = options.length + 1000;
-        Option memory a = Option(optionId, _owner, creator, _enabled, _title, _description, 0);       
+        Option memory a = Option(optionId, _owner, _creator, _enabled, _title, _description, 0);       
         options.push(a);            
     }
 
@@ -163,11 +177,10 @@ contract Poll {
     // ------- Manage Voting ------------
     // -----------------------------------
 
-    function voteForOption (uint _optionId) isActive public {
+    function voteForOption (address _userAddress, uint _optionId) isActive public {
         // vote on an option
         // if another option is voted on check if its an exclusive voting poll
 
-        address _userAddress = msg.sender;
         Option storage o = getOption(_optionId);
         if(o.isActive)
         {
@@ -211,23 +224,22 @@ contract Poll {
         }        
     }
 
-    function removeVoteForOption() isActive public{
+    function removeVoteForOption(address _userAddress) isActive public{
         if(!exclusiveVote) {
             revert("Please provide which vote should be removed");
         }
         else{
-            uint[] memory votedOptionIds = votersToOptionMapping[msg.sender];
-            removeVoteForOption(votedOptionIds[0]);
+            uint[] memory votedOptionIds = votersToOptionMapping[_userAddress];
+            removeVoteForOption(_userAddress, votedOptionIds[0]);
         }
     }
 
-    function removeVoteForOption(uint _optionId) isActive public {
+    function removeVoteForOption(address _userAddress, uint _optionId) isActive public {
         // removes the vote for an option
         
         bool success = false;
-        uint[] memory votedOptionIds = votersToOptionMapping[msg.sender];
-        uint optionsVotedCount = votedOptionIds.length;
-        if(optionsVotedCount == 0)
+        uint[] memory votedOptionIds = votersToOptionMapping[_userAddress];
+        if(votedOptionIds.length == 0)
         {
             revert("User did not vote yet");            
         }
@@ -238,12 +250,11 @@ contract Poll {
             else{
                 bool found = false;
                 uint index;
-                for(index = 0; index < optionsVotedCount; index++)
+                for(index = 0; index < votedOptionIds.length; index++)
                 {
-                    uint oldOptionId = votedOptionIds[index];
-                    if(oldOptionId == votedOptionIds[index]){
+                    if(_optionId == votedOptionIds[index]){
                         found = true;
-                        if(index < optionsVotedCount - 1)
+                        if(index < votedOptionIds.length - 1)
                         {
                             votedOptionIds[index] = votedOptionIds[index + 1];
                         }
@@ -251,8 +262,15 @@ contract Poll {
                 }
                 if(found)
                 {
-                    delete votedOptionIds[votedOptionIds.length - 1];
+                    // Resize the array to remove any unused elements
+                    uint newSize = votedOptionIds.length - 1;
+                    assembly {
+                        mstore(votedOptionIds, newSize)
+                    }
                 }   
+                else{
+                    revert("User did not vote for this option yet.");
+                }
             }  
 
             Option storage oldOption = getOption(_optionId);
@@ -264,7 +282,7 @@ contract Poll {
                 voterCount--;  
             } 
 
-            votersToOptionMapping[msg.sender] = votedOptionIds;
+            votersToOptionMapping[_userAddress] = votedOptionIds;
             success = true;
         }    
 
@@ -290,10 +308,6 @@ contract Poll {
         return creationDate;
     }
 
-    function getOptionCount() external view returns (uint) {
-        return voterCount;
-    }
-
     function getVoterCount() external view returns (uint) {
         return voterCount;
     }
@@ -302,11 +316,19 @@ contract Poll {
         return options;
     }
 
-    function getOptionId(Option memory _o) external pure returns(uint){
-        return _o.id;
+    function getOptionById(uint _id) external view returns (Option memory){
+        return getOption(_id);
     }
 
-    function isOptionActive(Option memory _o) external pure returns(bool){
-        return _o.isActive;
+    function enablePoll(address _userAddress) external {
+        this.activate(_userAddress);
+    }
+
+    function disablePoll(address _userAddress) external {
+        this.disable(_userAddress);
+    }
+
+    function isPollActive() external returns(bool){
+        return state == State.ACTIVE;
     }
 }

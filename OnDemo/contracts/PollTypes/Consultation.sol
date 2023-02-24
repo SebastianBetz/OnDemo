@@ -15,16 +15,16 @@ contract Consultation {
         DRAW,                   // Consultation has seen equal amount of Ayes and Noes
         NOTENOUGHVOTERTURNOUT,  // Not enough voters participated
         CANCELEDBYCOUNCIL       // Council canceled consultation
-        }
+    }
     enum State { 
         CREATED,
         APPROVED,    // Council approved consultation
         RUNNING,     // Members can vote
-        CONFIRMED,   // Consultation has been confirmed
-        REJECTED,    // Consultation has been rejected
+        CLOSED,   // Consultation has been closed, no more voting is possible
         CANCELED     // Council canceled consultation
     }
     enum Result{ 
+        NOTAVAILABLE,
         AYES,   // More members voted with Aye
         NOES,   // More members voted with No
         DRAW    // Same amount of members voted with Aye and No respectively
@@ -43,6 +43,7 @@ contract Consultation {
     uint minimalVoterTurnoutPercent = 50;
     
     State public state;
+    Result public result;
     CancelReason public cancelationReason;   
 
     AccountManagement private accMng;
@@ -66,8 +67,20 @@ contract Consultation {
         _;
     }
 
+    modifier isRunning() {
+        bool active = false;
+        if(state == State.RUNNING)
+        {
+            if(!hasDeadlinePassed()){
+                active = true;
+            }
+        }
+        require(active, "The poll must be in a running state!");
+        _;
+    }
+
     modifier onlyCouncelors (){
-        require(accMng.hasCouncilMemberRole(msg.sender), "The poll must be in an active state.");
+        require(accMng.hasCouncilMemberRole(msg.sender), "Function can only called by Councelors");
         _;
     }
 
@@ -85,8 +98,8 @@ contract Consultation {
         if(canCreate(_owners)) {
             utils = new Utils();
             poll = new Poll(_owners, _title, _description, true);  
-            poll.addOption(msg.sender, true, _confirmTitle, _confirmDescription);       
-            poll.addOption(msg.sender, true, _rejectTitle, _rejectDescription);  
+            poll.addOption(msg.sender, msg.sender, true, _confirmTitle, _confirmDescription);       
+            poll.addOption(msg.sender, msg.sender, true, _rejectTitle, _rejectDescription);  
             owners = _owners;              
             setState(State.CREATED, "Consultation created!");
         }
@@ -116,23 +129,13 @@ contract Consultation {
        
     }
 
-    function finish() onlyCouncelors private {
+    function close() onlyCouncelors public {
         if(state == State.RUNNING)
         {
             if(hasMinimumVoterTurnout())
             {
-                Result res = getResult();
-                if(res == Result.AYES)
-                {
-                    setState(State.CONFIRMED, "Ayes have it!");
-                }
-                else if(res == Result.NOES)
-                {
-                    setState(State.REJECTED, "Noes have it!");
-                }
-                else{
-                    cancel(CancelReason.DRAW, "It's a draw!");
-                }
+                result = getResult();   
+                setState(State.CLOSED, "Council has closed the referendum!");        
             }
             else{
                 cancel(CancelReason.NOTENOUGHVOTERTURNOUT, "Consultation canceled: Voter turnout has been too small!");
@@ -195,20 +198,20 @@ contract Consultation {
     // ------- Manage Voting ------------
     // -----------------------------------
 
-    function voteAye() isActive public {
+    function voteAye() isRunning public {
         vote(1000);
     }
 
-    function voteNo() isActive public {
+    function voteNo() isRunning public {
         vote(1001);
     }
 
     function vote (uint _optionId) private {
-        poll.voteForOption(_optionId);
+        poll.voteForOption(msg.sender, _optionId);
     }
 
     function removeVote() isActive public {
-        poll.removeVoteForOption();
+        poll.removeVoteForOption(msg.sender);
     }
 
 

@@ -12,8 +12,9 @@ contract Referendum {
     // A referendum has 3 phases.
     // 1.Phase: Members can create answers and express their support for the referendum. A min amount of support needs to be gathered before the deadline to continue.
     // 2.Phase: Members can create answers and express their support for the referendum. A min amount of support needs to be gathered before the deadline to continue.
-    // 3.Phase: The Council approves or cancels the referendum. If approved the members can vote on their favorite answer.
+    // 3.Phase: The Council approves or cancels the referendum. If approved the members can vote on ONE answer (Exclusive Voting).
     // A referendum extends the polling interface to include role based rights inherited from the accountmanagement contract.
+    // Vote ids start with 1000 and are incremented
 
     enum CancelReason { 
         NOTENOUGHSUPPORTERSFORSTAGE1, // Deadline has passed before enough support was gathered
@@ -85,11 +86,19 @@ contract Referendum {
     function addOption(string memory _title, string memory _description) onlyIfIsActive public {
         // options are connected to polls
         // option ids start with 1000 to be able to distniguish in the mapping who has voted for an option and who hasn't (meaning returning a value of 0)
-        poll.addOption(msg.sender, true, _title, _description);                  
+        poll.addOption(msg.sender, msg.sender, true, _title, _description);                  
     }
 
     function disableOption(uint _optionId) onlyIfIsActive public {
-        poll.disableOption(_optionId);
+        Poll.Option memory o = poll.getOptionById(_optionId);
+        if(o.owner == msg.sender)
+        {
+            poll.disableOption(_optionId);
+        }
+        else{
+            revert("Only Option owners can disable their option");
+        }
+
     }   
 
 
@@ -133,12 +142,12 @@ contract Referendum {
 
     function vote (uint _optionId) onlyIfIsPublished public {
         // let the user vote on a option
-        poll.voteForOption(_optionId);
+        poll.voteForOption(msg.sender, _optionId);
     }
 
     function removeVote() onlyIfIsPublished public {
         // removes the users vote
-        poll.removeVoteForOption();
+        poll.removeVoteForOption(msg.sender);
     }
 
     
@@ -155,11 +164,23 @@ contract Referendum {
     }
 
     function advanceToStage1() public {
-        setState(State.STAGE1, "advance");
+        if(checkStage1ThresholdReached() && !checkStage1DeadlineReached())
+        {
+            setState(State.STAGE1, "advance");
+        }
+        else{
+            revert("Threshold not reached or passed deadline ");
+        }
     }
 
     function advanceToStage2() public {
-        setState(State.STAGE2, "advance");
+        if(checkStage2ThresholdReached() && !checkStage2DeadlineReached())
+        {
+            setState(State.STAGE2, "advance");
+        }
+        else{
+            revert("Threshold not reached or passed deadline ");
+        }
     }
 
     function approve() onlyCouncelors public {
@@ -170,8 +191,8 @@ contract Referendum {
         setState(State.PUBLISHED, "council has published");
     }
 
-    function close() onlyCouncelors private {
-        setState(State.CLOSED, "council has closed");
+    function close() onlyCouncelors public {
+        setState(State.CLOSED, "council has closed the referendum");
     }
 
     function cancel(CancelReason _reason, string memory _description) onlyCouncelors private {

@@ -219,6 +219,13 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "close",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -424,27 +431,27 @@
 	},
 	"sources": {
 		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0x7658ea6081f84f2e194aabb04fe7cce60fda0ba6637e86929cab6e563105a935",
+			"keccak256": "0xa8cce11954355e20bc6527f82dc959820f7ca435819048d743d5f2df49adc847",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://4e7ab1c90d73084330639281b8fde05cdf536cb0579b7bfdcc3953534296c473",
-				"dweb:/ipfs/QmTxK87SredP1yVfVcYfQiCoS1xR2L7Ag3gyAdfCrkF2jx"
+				"bzz-raw://d309f66117423d25b105fa5f4b289337dd4ada60c13b1b8e770e3d876eebf65a",
+				"dweb:/ipfs/QmXF331VHVkLTzLVX2jHdtX5n62yRGjGcPqyiifjB2sr9V"
 			]
 		},
 		"OnDemo/contracts/Poll.sol": {
-			"keccak256": "0x129ee2f56ed9206ac98778e007aa1a41248c4ec209086a9d61666f124f62812e",
+			"keccak256": "0x0ab4456046781a7bc24b1bb58230fde6ec4054f3511029e53b1faed9744715dc",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://0bf12cee7a160378b436f6049bf49b961f9c5ba95bc69f6d56498ee6c0e58d6e",
-				"dweb:/ipfs/QmYm7DKNeXBfJnwVDquFi4qdvBxcbvuLTqPkm8fg6J5JCd"
+				"bzz-raw://cc52923b61c33b2411453e7a71760a58c2523d1f3680cfeeb1b8f05f77aa6909",
+				"dweb:/ipfs/QmNhFFZEBspKRwndKbJaQ4A2qrj15YRotzEyuEnbd3Ws86"
 			]
 		},
 		"OnDemo/contracts/PollTypes/Referendum.sol": {
-			"keccak256": "0xb66e9e8f96a94742f24a0385ac4477d57ab26b20cc57ce65b86391317b7f7e02",
+			"keccak256": "0x90a2d8998d8c8164b5fc79971694c97d71e2a42d5be3ff1ea20ed0bb707c6b8a",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://43bd5ee4725c481c770116e163085ed3a66bfb3e4a9836b58df698731562cbe2",
-				"dweb:/ipfs/QmYwXtnCQ3utyrvHvgKq6XTYJEyHoFBo3JrfeiH9jAPndb"
+				"bzz-raw://81a0fe0fba44551fac3108105cc2f0a613e382bf71121646a3b6bd0cb35dd40d",
+				"dweb:/ipfs/QmeTkQJBgUa1xDW9rTTB7smPN4DeDpaEmUh4QXKZ1bX4pK"
 			]
 		},
 		"OnDemo/contracts/Utils.sol": {
