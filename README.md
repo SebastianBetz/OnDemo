@@ -36,7 +36,7 @@ There is five main contracts involved in the project.
 Takes care of creating and assigning roles to users. 
 Different roles are needed to follow the processes of the other smart contracts.
 
-![Roles](Documentation/Images/Roles.png)
+![Roles](./Roles.png)
 
 The roles are:
 Guest - A newly registered user
