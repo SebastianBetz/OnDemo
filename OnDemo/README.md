@@ -55,7 +55,7 @@ It holds answers and votercounts. It can manage exclusive as well as multi-votin
 A consultation can be started only by a user with the role "Leader".
 It let's members choose from two answers, most likely Yes/No.
 
-![Consultation Flow Diagram](Documentation/Images/ConsultationFlowDiagram.png)
+![Consultation Flow Diagram](https://github.com/SebastianBetz/OnDemo/blob/d526b427e36597c299e502ac86f4a03374bef421/OnDemo/Documentation/Images/ConsultationFlowDiagram.png)
 
 3. Referendum.sol
 
