@@ -36,7 +36,10 @@ There is five main contracts involved in the project.
 Takes care of creating and assigning roles to users. 
 Different roles are needed to follow the processes of the other smart contracts.
 
-![Roles](https://github.com/SebastianBetz/OnDemo/blob/main/src/Documentation/Images/ConsultationFlowDiagram.png)
+<div align="center" style="margin-top: 1em; margin-bottom: 3em;">
+  <a href="https://ethereum.org"><img alt="ethereum logo" src="./eth-transparent.png" alt="ethereum.org" width="125"></a>
+  <h1>👋 Welcome to ethereum.org!</h1>
+</div>
 
 The roles are:
 Guest - A newly registered user
