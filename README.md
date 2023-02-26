@@ -1,8 +1,3 @@
-<div align="center" style="margin-top: 1em; margin-bottom: 3em;">
-  <a href="https://ethereum.org"><img alt="ethereum logo" src="./Documentation/Images/Roles.png" alt="ethereum.org" width="125"></a>
-  <h1>👋 Welcome to ethereum.org!</h1>
-</div>
-
 # OnDemo - A smart contract approach to a participatory political party platform
 
 These smart contracts were developed as part of a master thesis at the Free University of Bolzano.
@@ -37,7 +32,7 @@ Possible improvements to the backend include the encryption of voter-addresses a
 There is five main contracts involved in the project.
 
 
-1. AccountManagement.sol
+### 1. AccountManagement.sol
 Takes care of creating and assigning roles to users. 
 Different roles are needed to follow the processes of the other smart contracts.
 
@@ -47,36 +42,43 @@ Member - A user which is allowed to participate on the platform as long as he's 
 CouncilMember - A user which is part of the council. The council needs to approve different stages of the consoltation, referendum and election processes.
 Leader - A user which is part of the leaderboard. Only Leaders are allowed to create consultations
 
+<div align="center" style="margin-top: 1em; margin-bottom: 4em;">
+  <a href=""><img alt="Roles" src="./documentation/Images/Roles.png"width="400"></a>
+</div>
 
-2. Poll.sol
+### 2. Poll.sol
 
 A poll is an interface for the 3 different polling options "Consultation", "Referendum" and "Election".
 It holds answers and votercounts. It can manage exclusive as well as multi-voting.
 
-2. Consultation.sol
+### 3. Consultation.sol
 
 A consultation can be started only by a user with the role "Leader".
 It let's members choose from two answers, most likely Yes/No.
 
-![Consultation Flow Diagram](https://github.com/SebastianBetz/OnDemo/blob/d526b427e36597c299e502ac86f4a03374bef421/OnDemo/Documentation/Images/ConsultationFlowDiagram.png)
+<div align="center" style="margin-top: 1em; margin-bottom: 4em;">
+  <a href=""><img alt="Consultation FlowDiagram" src="./documentation/Images/ConsultationFlowDiagram.png"width="400"></a>
+</div>
 
-3. Referendum.sol
+### 4. Referendum.sol
 
 A referendum can be started by users with the role "Member", "CouncilMember", or "Leader"
 It let's users create a general referendum with a unlimited amount of answers.
 Referendums need to pass 2 different stages which include deadlines and a minimal support threshold.
 The council pushes the referendum to the different steps. This can be automated by an external service.
 
-![Referendum Flow Diagram](Documentation/Images/ReferendumFlowDiagram.png)
+<div align="center" style="margin-top: 1em; margin-bottom: 4em;">
+  <a href=""><img alt="Referendum Flow Diagram" src="./documentation/images/ReferendumFlowDiagram.png"width="400"></a>
+</div>
 
-
-4. Election
+### 5. Election
 
 An election can either elect the next leaderboard or the next council.
 It can be started by the council only. This process should be changed to be triggered automatically after a deadline has passed.
 
-![Election Flow Diagram](Documentation/Images/ElectionFlowDiagram.png)
-
+<div align="center" style="margin-top: 1em; margin-bottom: 4em;">
+  <a href=""><img alt="Election FlowDiagram" src="./documentation/images/ElectionFlowDiagram.png"width="400"></a>
+</div>
 
 ## Development
 
