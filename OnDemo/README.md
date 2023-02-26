@@ -55,7 +55,7 @@ It holds answers and votercounts. It can manage exclusive as well as multi-votin
 A consultation can be started only by a user with the role "Leader".
 It let's members choose from two answers, most likely Yes/No.
 
-![Consultation Flow Diagram](Documentation/Images/Referendum.png)
+![Consultation Flow Diagram](Documentation/Images/ConsultationFlowDiagram.png)
 
 3. Referendum.sol
 
@@ -64,7 +64,7 @@ It let's users create a general referendum with a unlimited amount of answers.
 Referendums need to pass 2 different stages which include deadlines and a minimal support threshold.
 The council pushes the referendum to the different steps. This can be automated by an external service.
 
-![Referendum Flow Diagram](Documentation/Images/Referendum.png)
+![Referendum Flow Diagram](Documentation/Images/ReferendumFlowDiagram.png)
 
 
 4. Election
@@ -72,7 +72,7 @@ The council pushes the referendum to the different steps. This can be automated 
 An election can either elect the next leaderboard or the next council.
 It can be started by the council only. This process should be changed to be triggered automatically after a deadline has passed.
 
-![Election Flow Diagram](Documentation/Images/Election.png)
+![Election Flow Diagram](Documentation/Images/ElectionFlowDiagram.png)
 
 
 ## Development
