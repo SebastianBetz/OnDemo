@@ -1,5 +1,5 @@
 <div align="center" style="margin-top: 1em; margin-bottom: 3em;">
-  <a href="https://ethereum.org"><img alt="ethereum logo" src="./Roles.png" alt="ethereum.org" width="125"></a>
+  <a href="https://ethereum.org"><img alt="ethereum logo" src="./Documentation/Images/Roles.png" alt="ethereum.org" width="125"></a>
   <h1>👋 Welcome to ethereum.org!</h1>
 </div>
 
