@@ -43,7 +43,7 @@ CouncilMember - A user which is part of the council. The council needs to approv
 Leader - A user which is part of the leaderboard. Only Leaders are allowed to create consultations
 
 <div align="center" style="margin-top: 1em; margin-bottom: 4em;">
-  <a href=""><img alt="Roles" src="./documentation/Images/Roles.png"width="400"></a>
+  <a href=""><img alt="Roles" src="./documentation/images/Roles.png"width="400"></a>
 </div>
 
 ### 2. Poll.sol
@@ -57,7 +57,7 @@ A consultation can be started only by a user with the role "Leader".
 It let's members choose from two answers, most likely Yes/No.
 
 <div align="center" style="margin-top: 1em; margin-bottom: 4em;">
-  <a href=""><img alt="Consultation FlowDiagram" src="./documentation/Images/ConsultationFlowDiagram.png"width="400"></a>
+  <a href=""><img alt="Consultation FlowDiagram" src="./documentation/images/Consultation-Flow-Diagram.png"width="400"></a>
 </div>
 
 ### 4. Referendum.sol
@@ -68,7 +68,7 @@ Referendums need to pass 2 different stages which include deadlines and a minima
 The council pushes the referendum to the different steps. This can be automated by an external service.
 
 <div align="center" style="margin-top: 1em; margin-bottom: 4em;">
-  <a href=""><img alt="Referendum Flow Diagram" src="./documentation/images/ReferendumFlowDiagram.png"width="400"></a>
+  <a href=""><img alt="Referendum Flow Diagram" src="./documentation/images/Referendum-Flow-Diagram.png"width="400"></a>
 </div>
 
 ### 5. Election
@@ -77,7 +77,7 @@ An election can either elect the next leaderboard or the next council.
 It can be started by the council only. This process should be changed to be triggered automatically after a deadline has passed.
 
 <div align="center" style="margin-top: 1em; margin-bottom: 4em;">
-  <a href=""><img alt="Election FlowDiagram" src="./documentation/images/ElectionFlowDiagram.png"width="400"></a>
+  <a href=""><img alt="Election FlowDiagram" src="./documentation/images/Election-Flow-Diagram.png"width="400"></a>
 </div>
 
 ## Development
