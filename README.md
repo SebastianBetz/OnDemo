@@ -40,7 +40,7 @@ The roles are:
 Guest - A newly registered user
 Member - A user which is allowed to participate on the platform as long as he's "active". Members are allowed to create referendums.
 CouncilMember - A user which is part of the council. The council needs to approve different stages of the consoltation, referendum and election processes.
-Leader - A user which is part of the leaderboard. Only Leaders are allowed to create consultations
+Leader - A user which is part of the leaderboard. Only Leaders are allowed to create referendums
 
 <div align="center" style="margin-top: 1em; margin-bottom: 4em;">
   <a href=""><img alt="Roles" src="./documentation/images/Roles.png"width="400"></a>
@@ -48,27 +48,27 @@ Leader - A user which is part of the leaderboard. Only Leaders are allowed to cr
 
 ### 2. Poll.sol
 
-A poll is an interface for the 3 different polling options "Consultation", "Referendum" and "Election".
+A poll is an interface for the 3 different polling options "Referendum", "Initiative" and "Election".
 It holds answers and votercounts. It can manage exclusive as well as multi-voting.
 
-### 3. Consultation.sol
+### 3. Referendum.sol
 
-A consultation can be started only by a user with the role "Leader".
+A referendum can be started only by a user with the role "Leader".
 It let's members choose from two answers, most likely Yes/No.
 
 <div align="center" style="margin-top: 1em; margin-bottom: 4em;">
-  <a href=""><img alt="Consultation FlowDiagram" src="./documentation/images/Consultation-Flow-Diagram.png"width="400"></a>
+  <a href=""><img alt="Referendum FlowDiagram" src="./documentation/images/Referendum-Flow-Diagram.png"width="400"></a>
 </div>
 
-### 4. Referendum.sol
+### 4. Initiative.sol
 
-A referendum can be started by users with the role "Member", "CouncilMember", or "Leader"
-It let's users create a general referendum with a unlimited amount of answers.
-Referendums need to pass 2 different stages which include deadlines and a minimal support threshold.
-The council pushes the referendum to the different steps. This can be automated by an external service.
+An initiative can be started by users with the role "Member", "CouncilMember", or "Leader"
+It let's users create a general initiative with an unlimited amount of answers.
+Initiatives need to pass 2 different stages which include deadlines and a minimal support threshold.
+The council pushes the initiative through the different steps. This can be automated by an external service.
 
 <div align="center" style="margin-top: 1em; margin-bottom: 4em;">
-  <a href=""><img alt="Referendum Flow Diagram" src="./documentation/images/Referendum-Flow-Diagram.png"width="400"></a>
+  <a href=""><img alt="Initiative Flow Diagram" src="./documentation/images/Initiative-Flow-Diagram.png"width="400"></a>
 </div>
 
 ### 5. Election
