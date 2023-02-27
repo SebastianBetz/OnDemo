@@ -504,7 +504,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"OnDemo/contracts/Poll.sol": "Poll"
+			"src/contracts/Poll.sol": "Poll"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -518,7 +518,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"OnDemo/contracts/Poll.sol": {
+		"src/contracts/Poll.sol": {
 			"keccak256": "0x0ab4456046781a7bc24b1bb58230fde6ec4054f3511029e53b1faed9744715dc",
 			"license": "GPL-3.0",
 			"urls": [
@@ -526,7 +526,7 @@
 				"dweb:/ipfs/QmNhFFZEBspKRwndKbJaQ4A2qrj15YRotzEyuEnbd3Ws86"
 			]
 		},
-		"OnDemo/contracts/Utils.sol": {
+		"src/contracts/Utils.sol": {
 			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
 			"license": "GPL-3.0",
 			"urls": [

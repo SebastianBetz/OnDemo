@@ -70,13 +70,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "assignToBoard",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "canAddCandidate",
 				"outputs": [
 					{
@@ -670,7 +663,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"OnDemo/contracts/PollTypes/Election.sol": "Election"
+			"src/contracts/PollTypes/Election.sol": "Election"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -684,7 +677,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"OnDemo/contracts/AccountManagement.sol": {
+		"src/contracts/AccountManagement.sol": {
 			"keccak256": "0xacd11913242dc5bd7a54c471e8349a6c7911849e9e8490b3da75771e4d8929b0",
 			"license": "GPL-3.0",
 			"urls": [
@@ -692,7 +685,7 @@
 				"dweb:/ipfs/QmPjLeTa2J2cGkQtRspjqhiDaoPGnfM6P3sXcUL9pmhbnt"
 			]
 		},
-		"OnDemo/contracts/Poll.sol": {
+		"src/contracts/Poll.sol": {
 			"keccak256": "0x0ab4456046781a7bc24b1bb58230fde6ec4054f3511029e53b1faed9744715dc",
 			"license": "GPL-3.0",
 			"urls": [
@@ -700,15 +693,15 @@
 				"dweb:/ipfs/QmNhFFZEBspKRwndKbJaQ4A2qrj15YRotzEyuEnbd3Ws86"
 			]
 		},
-		"OnDemo/contracts/PollTypes/Election.sol": {
-			"keccak256": "0xe27998b73a8ac0f9b2993a0e2ba845761b69d3be3d7f4957486994e1d42117f5",
+		"src/contracts/PollTypes/Election.sol": {
+			"keccak256": "0xf1fa7dda3573af0669dc5b01896785e253ecf7bbfba455363539366cace97a4b",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://d747312dab678008ca76ebe5e850f8f9c8640868925bc5202e59c5f3f5925d7f",
-				"dweb:/ipfs/QmbeCs9s36wS23RHe3FiW6mkXwZRKNbZByBGs2bo22p8Sw"
+				"bzz-raw://066b5b066d3135adfe4ad2c26f55962e4e3c7b2c979e806d463f3aaa66222b3b",
+				"dweb:/ipfs/QmTrGQMbsZ61mKyZTW2bLPBNKmNp9kfSCBY1pYNQzySB4K"
 			]
 		},
-		"OnDemo/contracts/Utils.sol": {
+		"src/contracts/Utils.sol": {
 			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
 			"license": "GPL-3.0",
 			"urls": [

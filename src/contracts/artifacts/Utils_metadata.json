@@ -94,7 +94,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"OnDemo/contracts/Utils.sol": "Utils"
+			"src/contracts/Utils.sol": "Utils"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -108,7 +108,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"OnDemo/contracts/Utils.sol": {
+		"src/contracts/Utils.sol": {
 			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
 			"license": "GPL-3.0",
 			"urls": [

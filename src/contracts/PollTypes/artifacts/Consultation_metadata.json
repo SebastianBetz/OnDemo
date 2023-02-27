@@ -402,7 +402,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"OnDemo/contracts/PollTypes/Consultation.sol": "Consultation"
+			"src/contracts/PollTypes/Consultation.sol": "Consultation"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -416,7 +416,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"OnDemo/contracts/AccountManagement.sol": {
+		"src/contracts/AccountManagement.sol": {
 			"keccak256": "0xacd11913242dc5bd7a54c471e8349a6c7911849e9e8490b3da75771e4d8929b0",
 			"license": "GPL-3.0",
 			"urls": [
@@ -424,7 +424,7 @@
 				"dweb:/ipfs/QmPjLeTa2J2cGkQtRspjqhiDaoPGnfM6P3sXcUL9pmhbnt"
 			]
 		},
-		"OnDemo/contracts/Poll.sol": {
+		"src/contracts/Poll.sol": {
 			"keccak256": "0x0ab4456046781a7bc24b1bb58230fde6ec4054f3511029e53b1faed9744715dc",
 			"license": "GPL-3.0",
 			"urls": [
@@ -432,7 +432,7 @@
 				"dweb:/ipfs/QmNhFFZEBspKRwndKbJaQ4A2qrj15YRotzEyuEnbd3Ws86"
 			]
 		},
-		"OnDemo/contracts/PollTypes/Consultation.sol": {
+		"src/contracts/PollTypes/Consultation.sol": {
 			"keccak256": "0x510087bd4a9d7c1520e3c0b686580d02cbb91583bcf1eeb37c0b3849e7448cc1",
 			"license": "GPL-3.0",
 			"urls": [
@@ -440,7 +440,7 @@
 				"dweb:/ipfs/QmPUYLWmRWPKgVdhUBshZcL41RxTsvy1Z5NHWkhfaWyv2W"
 			]
 		},
-		"OnDemo/contracts/Utils.sol": {
+		"src/contracts/Utils.sol": {
 			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
 			"license": "GPL-3.0",
 			"urls": [

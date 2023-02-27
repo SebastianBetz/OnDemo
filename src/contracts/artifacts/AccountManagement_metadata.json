@@ -510,7 +510,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"OnDemo/contracts/AccountManagement.sol": "AccountManagement"
+			"src/contracts/AccountManagement.sol": "AccountManagement"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -524,7 +524,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"OnDemo/contracts/AccountManagement.sol": {
+		"src/contracts/AccountManagement.sol": {
 			"keccak256": "0xacd11913242dc5bd7a54c471e8349a6c7911849e9e8490b3da75771e4d8929b0",
 			"license": "GPL-3.0",
 			"urls": [

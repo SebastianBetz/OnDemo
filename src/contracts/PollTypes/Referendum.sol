@@ -7,31 +7,28 @@ import "../Poll.sol";
 import "../Utils.sol";
 
 contract Referendum {
-    // A referendum contract that uses the polling interface
-    // A referendum can have multiple answers that are created by members. It has a deadline and can be started by any member.
-    // A referendum has 3 phases.
-    // 1.Phase: Members can create answers and express their support for the referendum. A min amount of support needs to be gathered before the deadline to continue.
-    // 2.Phase: Members can create answers and express their support for the referendum. A min amount of support needs to be gathered before the deadline to continue.
-    // 3.Phase: The Council approves or cancels the referendum. If approved the members can vote on ONE answer (Exclusive Voting).
-    // A referendum extends the polling interface to include role based rights inherited from the accountmanagement contract.
-    // Vote ids start with 1000 and are incremented
+    // A Referendum contract that uses the polling interface
+    // A Referendum can have only two answers, has a deadline and needs to be started by a council member
+    // A Referendum extends the polling interface to include role based rights inherited from the accountmanagement contract
 
     enum CancelReason { 
-        NOTENOUGHSUPPORTERSFORSTAGE1, // Deadline has passed before enough support was gathered
-        NOTENOUGHSUPPORTERSFORSTAGE2, // Deadline has passed before enough support was gathered
-        CANCELEDBYCOUNCIL,            // Council canceled
-        CANCELEDBYOWNERS              // Owners canceled
+        DRAW,                   // Referendum has seen equal amount of Ayes and Noes
+        NOTENOUGHVOTERTURNOUT,  // Not enough voters participated
+        CANCELEDBYCOUNCIL       // Council canceled referendum
     }
-
     enum State { 
-        CREATED, 
-        STAGE1,             // Referendum has gathered enough support before the first deadline
-        STAGE2,             // Referendum has gathered enough support before the second deadline
-        APPROVEDBYCOUNCIL,  // Referendum has been approved by council
-        PUBLISHED,          // Referendum has been published by council
-        CLOSED,             
-        CANCELED 
-    } 
+        CREATED,
+        APPROVED,    // Council approved referendum
+        RUNNING,     // Members can vote
+        CLOSED,      // Referendum has been closed, no more voting is possible
+        CANCELED     // Council canceled referendum
+    }
+    enum Result{ 
+        NOTAVAILABLE,
+        AYES,   // More members voted with Aye
+        NOES,   // More members voted with No
+        DRAW    // Same amount of members voted with Aye and No respectively
+    }
 
     event StateChanged(
         address indexed _by,
@@ -41,158 +38,112 @@ contract Referendum {
     );
 
     address[] public owners;    
-    uint public stage1Threshold = 28; // in days
-    uint public stage2Threshold = 28; // in days
-    uint public stage1SupportThreshold = 20; // in % of elegible voters
-    uint public stage2SupportThreshold  = 50;  // in % of elegible voters
-
-    uint public supporterCount;
+    address[] public guaranteers;
+    uint public daysOpen = 28;
+    uint minimalVoterTurnoutPercent = 50;
+    
     State public state;
+    Result public result;
     CancelReason public cancelationReason;   
 
     AccountManagement private accMng;
     Poll private poll;
     Utils private utils;
 
-    mapping(address => bool) supporters;
-
-    constructor(AccountManagement _accMngAddress, address[] memory _owners, string memory _title, string memory _description) {
+    constructor(AccountManagement _accMngAddress, address[] memory _owners, string memory _title, string memory _description, string memory _confirmTitle, string memory _confirmDescription, string memory _rejectTitle, string memory _rejectDescription) {        
         accMng = _accMngAddress;
-        poll = new Poll(_owners, _title, _description, true);        
-        utils = new Utils();
+        create(_owners, _title, _description, _confirmTitle, _confirmDescription, _rejectTitle, _rejectDescription);  
     }
 
-    modifier onlyIfIsActive () {
-        require(state == State.CREATED || state == State.STAGE1 || state == State.STAGE2, "The poll must be in an active state.");
+    modifier isActive() {
+        bool active = false;
+        if(state == State.CREATED || state == State.APPROVED || state == State.RUNNING)
+        {
+            if(!hasDeadlinePassed()){
+                active = true;
+            }
+        }
+        require(active, "The poll must be in an active state!");
         _;
     }
 
-    modifier onlyIfIsPublished () {
-        require(state == State.PUBLISHED, "The poll must be in an active state.");
+    modifier isRunning() {
+        bool active = false;
+        if(state == State.RUNNING)
+        {
+            if(!hasDeadlinePassed()){
+                active = true;
+            }
+        }
+        require(active, "The poll must be in a running state!");
         _;
     }
 
     modifier onlyCouncelors (){
-        require(accMng.hasCouncilMemberRole(msg.sender), "The poll must be in an active state.");
+        require(accMng.hasCouncilMemberRole(msg.sender), "Function can only called by Councelors");
         _;
     }
-
-
-
-    // -----------------------------------
-    // ------- Manage Options ------------
-    // -----------------------------------
-
-    function addOption(string memory _title, string memory _description) onlyIfIsActive public {
-        // options are connected to polls
-        // option ids start with 1000 to be able to distniguish in the mapping who has voted for an option and who hasn't (meaning returning a value of 0)
-        poll.addOption(msg.sender, msg.sender, true, _title, _description);                  
-    }
-
-    function disableOption(uint _optionId) onlyIfIsActive public {
-        Poll.Option memory o = poll.getOptionById(_optionId);
-        if(o.owner == msg.sender)
-        {
-            poll.disableOption(_optionId);
-        }
-        else{
-            revert("Only Option owners can disable their option");
-        }
-
-    }   
-
-
-
-    // -----------------------------------
-    // ------- Manage Support ------------
-    // -----------------------------------
-
-    function support() onlyIfIsActive public {
-        // referendums need support to push through stage 1 + 2. Here users can add their support
-        if(canSupport()){
-            if(supporters[msg.sender] == false){
-                supporters[msg.sender] = true;
-                supporterCount++;
-            }
-            else{
-                revert("User supports this poll already");
-            }
-        }
-        else{
-            revert("User is not allowed to support this poll");
-        }
-    }
-
-    function removeSupport() onlyIfIsActive public {
-        // removes support from the referendum
-        if(supporters[msg.sender] == true){
-            supporters[msg.sender] = false;
-            supporterCount--;
-        }
-        else{
-            revert("User did not support this poll");
-        }
-    }
-    
-
-
-    // -----------------------------------
-    // ------- Manage Voting ------------
-    // -----------------------------------
-
-    function vote (uint _optionId) onlyIfIsPublished public {
-        // let the user vote on a option
-        poll.voteForOption(msg.sender, _optionId);
-    }
-
-    function removeVote() onlyIfIsPublished public {
-        // removes the users vote
-        poll.removeVoteForOption(msg.sender);
-    }
-
-    
-
-
-
-    // -----------------------------------
-    // ---------- Manage State -----------
-    // -----------------------------------
 
     function setState(State _state, string memory _description) private {
         emit StateChanged(msg.sender, state, _state, _description);
         state = _state;
     }
 
-    function advanceToStage1() public {
-        if(checkStage1ThresholdReached() && !checkStage1DeadlineReached())
-        {
-            setState(State.STAGE1, "advance");
-        }
-        else{
-            revert("Threshold not reached or passed deadline ");
-        }
-    }
 
-    function advanceToStage2() public {
-        if(checkStage2ThresholdReached() && !checkStage2DeadlineReached())
-        {
-            setState(State.STAGE2, "advance");
+    // -----------------------------------
+    // ------- Manage Life Cycle ---------
+    // -----------------------------------
+
+    function create(address[] memory _owners, string memory _title, string memory _description, string memory _confirmTitle, string memory _confirmDescription, string memory _rejectTitle, string memory _rejectDescription) private{
+        if(canCreate(_owners)) {
+            utils = new Utils();
+            poll = new Poll(_owners, _title, _description, true);  
+            poll.addOption(msg.sender, msg.sender, true, _confirmTitle, _confirmDescription);       
+            poll.addOption(msg.sender, msg.sender, true, _rejectTitle, _rejectDescription);  
+            owners = _owners;              
+            setState(State.CREATED, "Referendum created!");
         }
         else{
-            revert("Threshold not reached or passed deadline ");
-        }
+            revert("One or more users can't create a referendum!");
+        }       
     }
 
     function approve() onlyCouncelors public {
-        setState(State.APPROVEDBYCOUNCIL, "council has approved");
+        if(state == State.CREATED)
+        {
+            setState(State.APPROVED, "Council has approved the referendum!");
+        }
+        else{
+            revert("Referendum is not in the 'Created' state and can therefore not be approved.");
+        }
     }
 
-    function publish() onlyCouncelors public {
-        setState(State.PUBLISHED, "council has published");
+    function start() onlyCouncelors public {
+        if(state == State.APPROVED)
+        {
+            setState(State.RUNNING, "Council has approved the referendum!");
+        }
+        else{
+            revert("Referendum is not in the 'Approved' state and can therefore not be started.");
+        }
+       
     }
 
     function close() onlyCouncelors public {
-        setState(State.CLOSED, "council has closed the referendum");
+        if(state == State.RUNNING)
+        {
+            if(hasMinimumVoterTurnout())
+            {
+                result = getResult();   
+                setState(State.CLOSED, "Council has closed the referendum!");        
+            }
+            else{
+                cancel(CancelReason.NOTENOUGHVOTERTURNOUT, "Referendum canceled: Voter turnout has been too small!");
+            }     
+        }
+        else{
+            revert("Referendum is not in the 'RUNNING' state and can therefore not be finished.");
+        }           
     }
 
     function cancel(CancelReason _reason, string memory _description) onlyCouncelors private {
@@ -201,54 +152,105 @@ contract Referendum {
     }
 
 
-
     // -----------------------------------
     // ------- Manage Results ------------
     // -----------------------------------
 
-    function getWinningOption() public view returns (uint) {
-        Poll.Option memory winOption;
-        uint winoptionVoteCount = 0;
-
+    function getConfirmCount() public view returns (uint) {
         Poll.Option[] memory options = poll.getOptions();
+        Poll.Option memory confirmOption = options[0];
+        uint confirmCount = confirmOption.voterCount;
+        return confirmCount;
+    }
 
-        for (uint i = 0; i < options.length; i++) {
-            uint voteCount = options[i].voterCount;
-            if(voteCount > winoptionVoteCount)
-            {
-                winOption = options[i];
-            }
+    function getRejectCount() public view returns (uint) {
+        Poll.Option[] memory options = poll.getOptions();
+        Poll.Option memory confirmOption = options[1];
+        uint rejectCount = confirmOption.voterCount;
+        return rejectCount;
+    }
+
+    function getResult() public view returns (Result) {
+        Result res = Result.AYES;
+        uint ayeCount = getConfirmCount();
+        uint noCount = getRejectCount();
+        if(ayeCount == noCount)
+        {
+            res = Result.DRAW;
         }
-
-        return winOption.id;
+        else if(ayeCount < noCount){
+            res = Result.NOES;
+        }
+        return res;
     }
 
     function getVoterTurnout() public view returns (uint) {
         return poll.getVoterCount();
     }
 
-
+    function getMinimalVoterTurnout() public view returns (uint){
+        uint votes = getVoterTurnout();
+        return utils.divideAndRoundUp(votes * minimalVoterTurnoutPercent, 100);
+    }   
+    
 
     // -----------------------------------
-    // --------- Check Rights ------------
+    // ------- Manage Voting ------------
     // -----------------------------------
 
-    function canCreate() public view returns (bool) {
-        address _userAddress = msg.sender;
-        if(accMng.hasLeaderRole(_userAddress) || accMng.hasCouncilMemberRole(_userAddress) || accMng.hasMemberRole(_userAddress))
-        {
-            return true;
-        }
-        return false;
+    function voteAye() isRunning public {
+        vote(1000);
     }
 
-    function canSupport() public view returns (bool) {
-        address _userAddress = msg.sender;
-        if(accMng.hasMemberRole(_userAddress) || accMng.hasCouncilMemberRole(_userAddress) || accMng.hasLeaderRole(_userAddress))
-        {
-            return true;
+    function voteNo() isRunning public {
+        vote(1001);
+    }
+
+    function vote (uint _optionId) private {
+        poll.voteForOption(msg.sender, _optionId);
+    }
+
+    function removeVote() isActive public {
+        poll.removeVoteForOption(msg.sender);
+    }
+
+
+
+    // -----------------------------------
+    // ------- Check Rights --------------
+    // -----------------------------------
+
+    function canCreate(address[] memory _creators) public view returns (bool) {
+        bool can = true;
+        for (uint i = 0; i < _creators.length; i++) {
+            if(!accMng.hasLeaderRole(_creators[i]))
+            {
+                can = false;
+            }
         }
-        return false;
+        return can;
+    }
+
+    function canApprove(address[] memory _guaranteers) public view returns (bool) {
+        bool can = true;
+        for (uint i = 0; i < _guaranteers.length; i++) {
+            if(!accMng.hasCouncilMemberRole(_guaranteers[i]))
+            {
+                can = false;
+            }
+        }
+        return can;
+    }
+
+    function canStart(address[] memory _creators) public view returns (bool) {
+        bool can = true;
+        for (uint i = 0; i < _creators.length; i++) {
+            if(!accMng.hasLeaderRole(_creators[i]))
+            {
+                can = false;
+            }
+        }
+        return can;
     }
 
     function canVote() public view returns (bool) {
@@ -262,7 +264,7 @@ contract Referendum {
 
     function canCancel() public view returns (bool) {
         address _userAddress = msg.sender;
-        if(accMng.hasCouncilMemberRole(_userAddress) || accMng.hasLeaderRole(_userAddress))
+        if(accMng.hasCouncilMemberRole(_userAddress))
         {
             return true;
         }
@@ -271,51 +273,25 @@ contract Referendum {
 
 
 
+
     // -----------------------------------
-    // -------- Check Thresholds ---------
+    // ----- Check Preconditions ---------
     // -----------------------------------
 
-    function checkStage1ThresholdReached() public view returns (bool){
-        bool reached = false;
-        uint elegibleVoterCount = accMng.getActiveMemberCount();
-        uint minSupporterCount = utils.divideAndRoundUp(elegibleVoterCount * stage1SupportThreshold , 100);
-
-        if(supporterCount > minSupporterCount){
-            reached = true;
-        }
-        return reached;    
-    }
-
-    function checkStage2ThresholdReached() public view returns (bool){
-        bool reached = false;
-        uint elegibleVoterCount = accMng.getActiveMemberCount();
-        uint minSupporterCount = utils.divideAndRoundUp(elegibleVoterCount * stage2SupportThreshold , 100);
-
-        if(supporterCount > minSupporterCount){
-            reached = true;
-        }
-        return reached;    
-    }
-
-    function checkStage1DeadlineReached() public view returns(bool){
+    function hasDeadlinePassed() public view returns (bool){
         bool deadlineReached = false;
         uint timestamp = block.timestamp;
-        uint stage2Deadline = poll.getCreationDate() + (stage1Threshold * 1 days);
+        uint deadline = poll.getCreationDate() + (daysOpen * 1 days);
 
-        if (timestamp > stage2Deadline){
+        if (timestamp > deadline){
             deadlineReached = true;
         }
         return deadlineReached;
     }
 
-    function checkStage2DeadlineReached() public view returns(bool){
-        bool deadlineReached = false;
-        uint timestamp = block.timestamp;
-        uint stage2Deadline = poll.getCreationDate() + (stage1Threshold + stage2Threshold * 1 days);
-
-        if (timestamp > stage2Deadline){
-            deadlineReached = true;
-        }
-        return deadlineReached;
+    function hasMinimumVoterTurnout() public view returns (bool){
+        uint votes = getVoterTurnout();
+        uint minimalVotesNeeded = getMinimalVoterTurnout();
+        return votes > minimalVotesNeeded;
     }
 }

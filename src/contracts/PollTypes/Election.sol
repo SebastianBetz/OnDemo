@@ -404,25 +404,20 @@ contract Election {
         return topNCandidates;
     }
 
-    function assignToBoard() public {   
-        if(state == State.INAUGURATION) {
-            Poll.Option[] memory winningCandidates = getWinningCandidates();
-            address[] memory candidateAddreses = new address[](winningCandidates.length);
-            for (uint i = 0; i < winningCandidates.length; i++) {
-                candidateAddreses[i] = winningCandidates[i].owner;
-            }
-
-            if(role == AccountManagement.Role.LEADER) {
-                AccountManagement.LeaderBoard memory l = accMng.createLeaderBoard(candidateAddreses);
-                accMng.appointLeaderBoard(msg.sender, l);
-            } else if(role == AccountManagement.Role.COUNCILMEMBER) {
-                AccountManagement.Council memory c = accMng.createCouncil(candidateAddreses);
-                accMng.appointCouncil(msg.sender, c);
-            }   
-        }     
-        else{
-            revert("Election is not in state INAUGURATION");
+    function assignToBoard() private {   
+        Poll.Option[] memory winningCandidates = getWinningCandidates();
+        address[] memory candidateAddreses = new address[](winningCandidates.length);
+        for (uint i = 0; i < winningCandidates.length; i++) {
+            candidateAddreses[i] = winningCandidates[i].owner;
         }
+
+        if(role == AccountManagement.Role.LEADER) {
+            AccountManagement.LeaderBoard memory l = accMng.createLeaderBoard(candidateAddreses);
+            accMng.appointLeaderBoard(msg.sender, l);
+        } else if(role == AccountManagement.Role.COUNCILMEMBER) {
+            AccountManagement.Council memory c = accMng.createCouncil(candidateAddreses);
+            accMng.appointCouncil(msg.sender, c);
+        }   
     }
 
     function getVoterTurnout() public view returns (uint) {

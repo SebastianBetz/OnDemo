@@ -26,6 +26,26 @@
 						"internalType": "string",
 						"name": "_description",
 						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_confirmTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_confirmDescription",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rejectTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rejectDescription",
+						"type": "string"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -63,42 +83,29 @@
 				"type": "event"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_title",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_description",
-						"type": "string"
-					}
-				],
-				"name": "addOption",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "advanceToStage1",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "advanceToStage2",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "approve",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_guaranteers",
+						"type": "address[]"
+					}
+				],
+				"name": "canApprove",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -115,7 +122,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_creators",
+						"type": "address[]"
+					}
+				],
 				"name": "canCreate",
 				"outputs": [
 					{
@@ -128,8 +141,14 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "canSupport",
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_creators",
+						"type": "address[]"
+					}
+				],
+				"name": "canStart",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -168,74 +187,74 @@
 			},
 			{
 				"inputs": [],
-				"name": "checkStage1DeadlineReached",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "checkStage1ThresholdReached",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "checkStage2DeadlineReached",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "checkStage2ThresholdReached",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "close",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "daysOpen",
+				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "_optionId",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "disableOption",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getConfirmCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getMinimalVoterTurnout",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getRejectCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getResult",
+				"outputs": [
+					{
+						"internalType": "enum Referendum.Result",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -252,13 +271,45 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "getWinningOption",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"name": "guaranteers",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hasDeadlinePassed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hasMinimumVoterTurnout",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -285,20 +336,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "publish",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "removeSupport",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "removeVote",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -306,12 +343,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "stage1SupportThreshold",
+				"name": "result",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "enum Referendum.Result",
 						"name": "",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -319,41 +356,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "stage1Threshold",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "stage2SupportThreshold",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "stage2Threshold",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "start",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -371,33 +376,14 @@
 			},
 			{
 				"inputs": [],
-				"name": "support",
+				"name": "voteAye",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "supporterCount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_optionId",
-						"type": "uint256"
-					}
-				],
-				"name": "vote",
+				"name": "voteNo",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -416,7 +402,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"OnDemo/contracts/PollTypes/Referendum.sol": "Referendum"
+			"src/contracts/PollTypes/Referendum.sol": "Referendum"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -430,15 +416,15 @@
 		"remappings": []
 	},
 	"sources": {
-		"OnDemo/contracts/AccountManagement.sol": {
-			"keccak256": "0xa8cce11954355e20bc6527f82dc959820f7ca435819048d743d5f2df49adc847",
+		"src/contracts/AccountManagement.sol": {
+			"keccak256": "0xacd11913242dc5bd7a54c471e8349a6c7911849e9e8490b3da75771e4d8929b0",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://d309f66117423d25b105fa5f4b289337dd4ada60c13b1b8e770e3d876eebf65a",
-				"dweb:/ipfs/QmXF331VHVkLTzLVX2jHdtX5n62yRGjGcPqyiifjB2sr9V"
+				"bzz-raw://30e60fa56f275e2ec4cd5bb020f8456e625e17f9dea6ad6216c427d93728cefd",
+				"dweb:/ipfs/QmPjLeTa2J2cGkQtRspjqhiDaoPGnfM6P3sXcUL9pmhbnt"
 			]
 		},
-		"OnDemo/contracts/Poll.sol": {
+		"src/contracts/Poll.sol": {
 			"keccak256": "0x0ab4456046781a7bc24b1bb58230fde6ec4054f3511029e53b1faed9744715dc",
 			"license": "GPL-3.0",
 			"urls": [
@@ -446,15 +432,15 @@
 				"dweb:/ipfs/QmNhFFZEBspKRwndKbJaQ4A2qrj15YRotzEyuEnbd3Ws86"
 			]
 		},
-		"OnDemo/contracts/PollTypes/Referendum.sol": {
-			"keccak256": "0x90a2d8998d8c8164b5fc79971694c97d71e2a42d5be3ff1ea20ed0bb707c6b8a",
+		"src/contracts/PollTypes/Referendum.sol": {
+			"keccak256": "0x149c575fe199b323b7c39a742ca0e045abab0ded9fa77cf05e418f9906484898",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://81a0fe0fba44551fac3108105cc2f0a613e382bf71121646a3b6bd0cb35dd40d",
-				"dweb:/ipfs/QmeTkQJBgUa1xDW9rTTB7smPN4DeDpaEmUh4QXKZ1bX4pK"
+				"bzz-raw://ad412159f3ce887476ecfe0baa4fbab55ff59894f9c290e2d6da20adff9627ee",
+				"dweb:/ipfs/QmZvVg5GHxwkEjzcuuBT8xUvDEtY9eaMDE289mAVQN7dZQ"
 			]
 		},
-		"OnDemo/contracts/Utils.sol": {
+		"src/contracts/Utils.sol": {
 			"keccak256": "0xca9782f9ec4972acc6410dd1c3e1cb636ea7d594d428f001446a4aef48c151cc",
 			"license": "GPL-3.0",
 			"urls": [
